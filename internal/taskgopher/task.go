@@ -36,18 +36,42 @@ type Task struct {
 }
 
 // NewTask returns a new task
-func NewTask() *Task {
+func NewTask(filter *Filter) *Task {
 	now := time.Now()
 	task := &Task{
-		UUID:    uuid.New(),
-		Status:  statusPending,
-		Created: &now,
+		UUID:        uuid.New(),
+		Description: filter.Description,
+		Due:         filter.Due,
+		Tags:        filter.Tags,
+		Contexts:    filter.Contexts,
+		Status:      statusPending,
+		Created:     &now,
 	}
 
 	task.urgency()
 
 	return task
 
+}
+
+func EditTask(task *Task, filter *Filter) {
+	now := time.Now()
+	task.Modified = &now
+
+	if filter.HasDue {
+		task.Due = filter.Due
+	}
+	if filter.Description != "" {
+		task.Description = filter.Description
+	}
+
+	if len(filter.Tags) > 0 {
+		task.Tags = filter.Tags
+	}
+
+	if len(filter.Contexts) > 0 {
+		task.Contexts = filter.Contexts
+	}
 }
 
 func (t *Task) complete() {
