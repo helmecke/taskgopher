@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"strings"
 
 	"github.com/olekukonko/tablewriter"
 )
@@ -33,8 +32,13 @@ func NewTaskgopher(store string) *Taskgopher {
 func (t *Taskgopher) Add(args []string) error {
 	t.load(false)
 
-	task := NewTask()
-	task.Description = strings.Join(args, " ")
+	parser := &Parser{}
+	filter, err := parser.ParseArgs(args)
+	if err != nil {
+		return err
+	}
+
+	task := NewTask(filter)
 
 	fmt.Printf("Created task %d.\n", t.TaskList.add(task))
 	t.save()
@@ -50,10 +54,13 @@ func (t *Taskgopher) Modify(args []string) error {
 	}
 	t.load(false)
 
-	task := t.TaskList.get(id)
-	if description := strings.Join(args[1:], " "); len(description) > 0 {
-		task.Description = description
+	parser := &Parser{}
+	filter, err := parser.ParseArgs(args[1:])
+	if err != nil {
+		return err
 	}
+	task := t.TaskList.get(id)
+	EditTask(task, filter)
 
 	t.TaskList.set(task)
 	fmt.Printf("Modified task %d.\n", task.ID)

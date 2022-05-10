@@ -12,21 +12,43 @@ const RFC3339FullDate = "2006-01-02"
 type Parser struct{}
 
 // ParseArgs parses args
-func (p *Parser) ParseArgs(args []string, task *Task) {
+func (p *Parser) ParseArgs(args []string) (*Filter, error) {
+	filter := &Filter{
+		HasDue: false,
+	}
+
+	var descriptionMatches []string
+
 	for _, arg := range args {
+		match := false
+
 		if strings.HasPrefix(arg, "@") {
-			task.Contexts = append(task.Contexts, arg[1:])
+			match = true
+			filter.Contexts = append(filter.Contexts, arg[1:])
 		}
+
 		if strings.HasPrefix(arg, "#") {
-			task.Tags = append(task.Tags, arg[1:])
+			match = true
+			filter.Tags = append(filter.Tags, arg[1:])
 		}
+
 		if strings.HasPrefix(arg, "due:") {
+			match = true
+			filter.HasDue = true
 			date, err := time.Parse(RFC3339FullDate, arg[4:])
 			date = date.Local()
 			if err != nil {
 				log.Fatal(err)
 			}
-			task.Due = &date
+			filter.Due = &date
 		}
+
+		if !match {
+			descriptionMatches = append(descriptionMatches, arg)
+		}
+
+		filter.Description = strings.Join(descriptionMatches, " ")
 	}
+
+	return filter, nil
 }
