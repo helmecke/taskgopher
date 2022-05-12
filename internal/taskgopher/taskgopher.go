@@ -157,7 +157,7 @@ func (t *Taskgopher) List(all bool) error {
 		table.SetBorder(false)
 		table.SetHeader([]string{"ID", "Age", "Title", "Urgency"})
 
-		for _, task := range t.TaskList.Tasks {
+		for _, task := range t.TaskList.ByUrgency() {
 			table.Append(task.table())
 		}
 		table.Render()
