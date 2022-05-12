@@ -161,6 +161,7 @@ func (t *Taskgopher) List(all bool) error {
 			table.Append(task.table())
 		}
 		table.Render()
+		fmt.Printf("\n%d tasks\n", len(t.TaskList.Tasks))
 	} else {
 		fmt.Println("No tasks found.")
 	}
