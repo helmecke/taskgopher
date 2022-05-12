@@ -24,11 +24,13 @@ func (p *Parser) ParseArgs(args []string) (*Filter, error) {
 
 		if strings.HasPrefix(arg, "@") {
 			match = true
+			filter.HasContexts = true
 			filter.Contexts = append(filter.Contexts, arg[1:])
 		}
 
 		if strings.HasPrefix(arg, "#") {
 			match = true
+			filter.HasTags = true
 			filter.Tags = append(filter.Tags, arg[1:])
 		}
 
