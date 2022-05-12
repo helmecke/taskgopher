@@ -146,22 +146,29 @@ func (t *Taskgopher) Stop(args []string) error {
 }
 
 // List all takss
-func (t *Taskgopher) List(all bool) error {
+func (t *Taskgopher) List(args []string, all bool) error {
 	t.garbageCollect()
 	t.clear()
 	t.load(all)
+	parser := &Parser{}
+	filter, err := parser.ParseArgs(args)
+	if err != nil {
+		return err
+	}
+	taskFilter := &TaskFilter{Tasks: t.TaskList.ByUrgency(), Filter: filter}
+	tasks := taskFilter.ApplyFilter()
 
-	if len(t.TaskList.Tasks) > 0 {
+	if len(tasks) > 0 {
 		fmt.Println("")
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetBorder(false)
 		table.SetHeader([]string{"ID", "Age", "Title", "Urgency"})
 
-		for _, task := range t.TaskList.ByUrgency() {
+		for _, task := range tasks {
 			table.Append(task.table())
 		}
 		table.Render()
-		fmt.Printf("\n%d tasks\n", len(t.TaskList.Tasks))
+		fmt.Printf("\n%d tasks\n", len(tasks))
 	} else {
 		fmt.Println("No tasks found.")
 	}
