@@ -121,7 +121,7 @@ func (t *Task) urgency() {
 
 	urgency += math.Floor(u["age"] * (time.Since(*t.Created).Hours() / 24 / 39))
 
-	if len(t.Tags) < 0 {
+	if len(t.Tags) > 0 {
 		urgency += u["tags"]
 	}
 
