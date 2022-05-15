@@ -6,7 +6,6 @@ import (
 )
 
 func TestDiff(t *testing.T) {
-
 	t.Run("seconds", func(t *testing.T) {
 		dt := time.Date(2020, 10, 32, 0, 0, 0, 0, time.UTC)
 

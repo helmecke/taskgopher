@@ -51,7 +51,6 @@ func NewTask(filter *Filter) *Task {
 	task.urgency()
 
 	return task
-
 }
 
 func EditTask(task *Task, filter *Filter) {
