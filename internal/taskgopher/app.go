@@ -15,9 +15,9 @@ type App struct {
 }
 
 // NewApp creates a new Taskgopher app.
-func NewApp(store string) *App {
+func NewApp(location string) *App {
 	return &App{
-		TaskStore: newFileStore(store),
+		TaskStore: newFileStore(location),
 	}
 }
 
