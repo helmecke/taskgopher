@@ -18,5 +18,5 @@ func init() {
 }
 
 func add(cmd *cobra.Command, args []string) error {
-	return tg.NewTaskgopher(config.Config.DataDir).Add(args)
+	return tg.NewApp(config.Config.DataDir).Add(args)
 }

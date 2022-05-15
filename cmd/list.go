@@ -27,5 +27,5 @@ func init() {
 }
 
 func list(cmd *cobra.Command, args []string) error {
-	return tg.NewTaskgopher(config.Config.DataDir).List(args, viper.GetBool("all"))
+	return tg.NewApp(config.Config.DataDir).List(args, viper.GetBool("all"))
 }
