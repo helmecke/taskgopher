@@ -3,21 +3,20 @@ package taskgopher
 import (
 	"fmt"
 	"log"
-	"os"
 	"strconv"
-
-	"github.com/olekukonko/tablewriter"
 )
 
 type App struct {
 	TaskStore store
 	TaskList  TaskList
+	Printer   Printer
 }
 
 // NewApp creates a new Taskgopher app.
 func NewApp(location string) *App {
 	return &App{
 		TaskStore: newFileStore(location),
+		Printer:   newScreenPrinter(),
 	}
 }
 
@@ -151,20 +150,7 @@ func (a *App) List(args []string, all bool) error {
 	taskFilter := &TaskFilter{Tasks: a.TaskList.ByUrgency(), Filter: filter}
 	tasks := taskFilter.ApplyFilter()
 
-	if len(tasks) > 0 {
-		fmt.Println("")
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetBorder(false)
-		table.SetHeader([]string{"ID", "Age", "Title", "Urgency"})
-
-		for _, task := range tasks {
-			table.Append(task.table())
-		}
-		table.Render()
-		fmt.Printf("\n%d tasks\n", len(tasks))
-	} else {
-		fmt.Println("No tasks found.")
-	}
+	a.Printer.PrintTaskList(tasks)
 
 	return nil
 }
