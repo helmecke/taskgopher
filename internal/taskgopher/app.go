@@ -187,7 +187,6 @@ func (a *App) garbageCollect() {
 	a.load(false)
 	completed := a.TaskList.garbageCollect()
 	for _, task := range completed {
-
 		fmt.Printf("%+v\n", task)
 		a.TaskStore.complete(task)
 	}
