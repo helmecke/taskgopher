@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/helmecke/taskgopher/internal/config"
 	tg "github.com/helmecke/taskgopher/internal/taskgopher"
 	"github.com/spf13/cobra"
@@ -18,5 +20,9 @@ func init() {
 }
 
 func start(cmd *cobra.Command, args []string) error {
-	return tg.NewApp(config.Config.DataDir).Start(args)
+	if err := tg.NewApp(config.Config.DataDir).Start(args); err != nil {
+		return fmt.Errorf("failed to start task: %w", err)
+	}
+
+	return nil
 }

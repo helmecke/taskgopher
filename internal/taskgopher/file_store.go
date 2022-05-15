@@ -7,6 +7,8 @@ import (
 	"github.com/olivere/ndjson"
 )
 
+const mode = 0644
+
 // A FileStore loads and saves tasks to file
 type fileStore struct {
 	Location  string
@@ -27,18 +29,18 @@ func (f *fileStore) init() {
 		log.Fatal(err)
 	}
 
-	_, err := os.OpenFile(f.pending(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	_, err := os.OpenFile(f.pending(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, mode)
 	if err != nil {
 		log.Fatal(err)
 	}
-	_, err = os.OpenFile(f.completed(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	_, err = os.OpenFile(f.completed(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, mode)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
 func (f *fileStore) load(all bool) (tasks []*Task) {
-	file, err := os.OpenFile(f.pending(), os.O_RDONLY, 0644)
+	file, err := os.OpenFile(f.pending(), os.O_RDONLY, mode)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -49,7 +51,8 @@ func (f *fileStore) load(all bool) (tasks []*Task) {
 	for i := 1; r.Next(); i++ {
 		var task *Task
 		if err := r.Decode(&task); err != nil {
-			log.Fatalf("Decode failed: %v", err)
+			log.Panicf("Decode failed: %v", err)
+
 			return
 		}
 		task.ID = i
@@ -58,14 +61,15 @@ func (f *fileStore) load(all bool) (tasks []*Task) {
 	}
 
 	if err := r.Err(); err != nil {
-		log.Fatalf("Reader failed: %v", err)
+		log.Panicf("Reader failed: %v", err)
+
 		return
 	}
 
 	if all {
-		file, err := os.OpenFile(f.completed(), os.O_RDONLY, 0644)
+		file, err := os.OpenFile(f.completed(), os.O_RDONLY, mode)
 		if err != nil {
-			log.Fatal(err)
+			log.Panic(err)
 		}
 		defer file.Close()
 
@@ -74,14 +78,17 @@ func (f *fileStore) load(all bool) (tasks []*Task) {
 		for r.Next() {
 			var task *Task
 			if err := r.Decode(&task); err != nil {
-				log.Fatalf("Decode failed: %v", err)
+				log.Panicf("Decode failed: %v", err)
+
 				return
 			}
+
 			tasks = append(tasks, task)
 		}
 
 		if err := r.Err(); err != nil {
-			log.Fatalf("Reader failed: %v", err)
+			log.Panicf("Reader failed: %v", err)
+
 			return
 		}
 	}
@@ -90,27 +97,29 @@ func (f *fileStore) load(all bool) (tasks []*Task) {
 }
 
 func (f *fileStore) save(tasks []*Task) {
-	file, err := os.OpenFile(f.pending(), os.O_CREATE|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(f.pending(), os.O_CREATE|os.O_WRONLY, mode)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer file.Close()
+
 	if err := file.Truncate(0); err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	r := ndjson.NewWriter(file)
 
 	for _, task := range tasks {
 		if err := r.Encode(task); err != nil {
-			log.Fatalf("Encode failed: %v", err)
+			log.Panicf("Encode failed: %v", err)
+
 			return
 		}
 	}
 }
 
 func (f *fileStore) complete(task *Task) {
-	file, err := os.OpenFile(f.completed(), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	file, err := os.OpenFile(f.completed(), os.O_CREATE|os.O_WRONLY|os.O_APPEND, mode)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -119,7 +128,8 @@ func (f *fileStore) complete(task *Task) {
 	r := ndjson.NewWriter(file)
 
 	if err := r.Encode(task); err != nil {
-		log.Fatalf("Encode failed: %v", err)
+		log.Panicf("Encode failed: %v", err)
+
 		return
 	}
 }

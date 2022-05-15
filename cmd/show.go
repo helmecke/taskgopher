@@ -30,5 +30,6 @@ func show(cmd *cobra.Command, args []string) error {
 	result := markdown.Render(string(source), 80, 6)
 
 	fmt.Printf("%s", result)
+
 	return nil
 }

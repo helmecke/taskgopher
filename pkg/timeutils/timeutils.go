@@ -5,11 +5,12 @@ import (
 	"time"
 )
 
-// Diff returns duration between two dates as string
+// Diff returns duration between two dates as string.
 func Diff(a, b time.Time) string {
 	if a.Location() != b.Location() {
 		b = b.In(a.Location())
 	}
+
 	if a.After(b) {
 		a, b = b, a
 	}
@@ -20,32 +21,36 @@ func Diff(a, b time.Time) string {
 	h1, m1, s1 := a.Clock()
 	h2, m2, s2 := b.Clock()
 
-	year := int(y2 - y1)
+	year := y2 - y1
 	month := int(M2 - M1)
-	day := int(d2 - d1)
-	hour := int(h2 - h1)
-	min := int(m2 - m1)
-	sec := int(s2 - s1)
+	day := d2 - d1
+	hour := h2 - h1
+	min := m2 - m1
+	sec := s2 - s1
 
 	// Normalize negative values
 	if sec < 0 {
 		sec += 60
 		min--
 	}
+
 	if min < 0 {
 		min += 60
 		hour--
 	}
+
 	if hour < 0 {
 		hour += 24
 		day--
 	}
+
 	if day < 0 {
 		// days in month:
 		t := time.Date(y1, M1, 32, 0, 0, 0, 0, time.UTC)
 		day += 32 - t.Day()
 		month--
 	}
+
 	if month < 0 {
 		month += 12
 		year--
@@ -54,13 +59,16 @@ func Diff(a, b time.Time) string {
 	if year > 0 {
 		return strconv.Itoa(year) + "y"
 	}
+
 	if month > 0 {
 		return strconv.Itoa(month) + "M"
 	}
+
 	if day > 0 {
 		if day >= 7 {
 			return strconv.Itoa(day/7) + "w"
 		}
+
 		return strconv.Itoa(day) + "d"
 	}
 
