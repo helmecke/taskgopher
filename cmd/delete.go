@@ -14,23 +14,28 @@ var deleteCmd = &cobra.Command{
 	Use:     "delete",
 	Aliases: []string{"del"},
 	Short:   "Delete a task",
-	RunE:    delete,
+	RunE:    deleteRunE,
 }
 
 func init() {
 	rootCmd.AddCommand(deleteCmd)
 }
 
-func delete(cmd *cobra.Command, args []string) error {
+func deleteRunE(cmd *cobra.Command, args []string) error {
 	prompt := promptui.Prompt{
 		Label:     "Delete task",
 		IsConfirm: true,
 	}
 
 	if _, err := prompt.Run(); err == nil {
-		return tg.NewApp(config.Config.DataDir).Delete(args)
+		if err := tg.NewApp(config.Config.DataDir).Delete(args); err != nil {
+			return fmt.Errorf("failed to delete task: %w", err)
+		}
+
+		return nil
 	}
 
 	fmt.Println("Aborted...")
+
 	return nil
 }

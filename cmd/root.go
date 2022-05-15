@@ -26,9 +26,11 @@ func Execute() {
 			if len(os.Args[1:]) == 1 {
 				rootCmd.SetArgs(append([]string{"show"}, os.Args[1:]...))
 			}
+
 			if len(os.Args[1:]) == 2 {
 				rootCmd.SetArgs([]string{os.Args[2], os.Args[1]})
 			}
+
 			if len(os.Args[1:]) > 2 {
 				rootCmd.SetArgs(append([]string{os.Args[2], os.Args[1]}, os.Args[3:]...))
 			}

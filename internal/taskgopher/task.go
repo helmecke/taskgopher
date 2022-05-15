@@ -21,18 +21,18 @@ const (
 // A Task is an item
 type Task struct {
 	ID          int        `json:"-"`
-	UUID        uuid.UUID  `json:""`
-	Description string     `json:""`
-	Status      string     `json:""`
-	Created     *time.Time `json:""`
-	Modified    *time.Time `json:",omitempty"`
-	Completed   *time.Time `json:",omitempty"`
-	Due         *time.Time `json:",omitempty"`
-	Tags        []string   `json:",omitempty"`
-	Project     string     `json:",omitempty"`
-	Contexts    []string   `json:",omitempty"`
+	UUID        uuid.UUID  `json:"uuid"`
+	Description string     `json:"description"`
+	Status      string     `json:"status"`
+	Created     *time.Time `json:"created"`
+	Modified    *time.Time `json:"modified,omitempty"`
+	Completed   *time.Time `json:"completed,omitempty"`
+	Due         *time.Time `json:"due,omitempty"`
+	Tags        []string   `json:"tags,omitempty"`
+	Project     string     `json:"project,omitempty"`
+	Contexts    []string   `json:"contexts,omitempty"`
 	Urgency     float64    `json:"-"`
-	Notes       []string   `json:",omitempty"`
+	Notes       []string   `json:"notes,omitempty"`
 }
 
 // NewTask returns a new task

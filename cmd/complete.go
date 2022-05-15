@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/helmecke/taskgopher/internal/config"
 	tg "github.com/helmecke/taskgopher/internal/taskgopher"
 	"github.com/spf13/cobra"
@@ -12,13 +14,17 @@ var doneCmd = &cobra.Command{
 	Aliases: []string{"done"},
 	Short:   "Complete a task",
 	Args:    cobra.ExactArgs(1),
-	RunE:    complete,
+	RunE:    completeRunE,
 }
 
 func init() {
 	rootCmd.AddCommand(doneCmd)
 }
 
-func complete(cmd *cobra.Command, args []string) error {
-	return tg.NewApp(config.Config.DataDir).Complete(args)
+func completeRunE(cmd *cobra.Command, args []string) error {
+	if err := tg.NewApp(config.Config.DataDir).Complete(args); err != nil {
+		return fmt.Errorf("failed to complete task: %w", err)
+	}
+
+	return nil
 }

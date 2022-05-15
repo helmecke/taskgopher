@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/helmecke/taskgopher/internal/config"
@@ -27,5 +28,9 @@ func init() {
 }
 
 func list(cmd *cobra.Command, args []string) error {
-	return tg.NewApp(config.Config.DataDir).List(args, viper.GetBool("all"))
+	if err := tg.NewApp(config.Config.DataDir).List(args, viper.GetBool("all")); err != nil {
+		return fmt.Errorf("failed to list tasks: %w", err)
+	}
+
+	return nil
 }

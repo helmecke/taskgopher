@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/helmecke/taskgopher/internal/config"
 	tg "github.com/helmecke/taskgopher/internal/taskgopher"
 	"github.com/spf13/cobra"
@@ -10,13 +12,17 @@ import (
 var addCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Add a task",
-	RunE:  add,
+	RunE:  addRunE,
 }
 
 func init() {
 	rootCmd.AddCommand(addCmd)
 }
 
-func add(cmd *cobra.Command, args []string) error {
-	return tg.NewApp(config.Config.DataDir).Add(args)
+func addRunE(cmd *cobra.Command, args []string) error {
+	if err := tg.NewApp(config.Config.DataDir).Add(args); err != nil {
+		return fmt.Errorf("failed to add task: %w", err)
+	}
+
+	return nil
 }

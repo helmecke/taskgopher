@@ -30,6 +30,7 @@ func (t *TaskList) get(id int) *Task {
 			return task
 		}
 	}
+
 	return nil
 }
 
@@ -39,10 +40,12 @@ func (t *TaskList) set(task *Task) {
 
 func (t *TaskList) garbageCollect() (completed []*Task) {
 	var tasks []*Task
+
 	for _, task := range t.Tasks {
 		if !(task.Status == "deleted" || task.Status == "completed") {
 			tasks = append(tasks, task)
 		}
+
 		if task.Status == "completed" {
 			completed = append(completed, task)
 		}
@@ -62,5 +65,6 @@ func (a ByUrgency) Less(i, j int) bool {
 
 func (t *TaskList) ByUrgency() []*Task {
 	sort.Sort(ByUrgency(t.Tasks))
+
 	return t.Tasks
 }
