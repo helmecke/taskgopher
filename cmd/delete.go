@@ -28,7 +28,7 @@ func delete(cmd *cobra.Command, args []string) error {
 	}
 
 	if _, err := prompt.Run(); err == nil {
-		return tg.NewTaskgopher(config.Config.DataDir).Delete(args)
+		return tg.NewApp(config.Config.DataDir).Delete(args)
 	}
 
 	fmt.Println("Aborted...")

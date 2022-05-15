@@ -32,5 +32,5 @@ func init() {
 
 func modify(cmd *cobra.Command, args []string) error {
 	fmt.Println(due)
-	return tg.NewTaskgopher(config.Config.DataDir).Modify(args)
+	return tg.NewApp(config.Config.DataDir).Modify(args)
 }
