@@ -1,6 +1,7 @@
 package taskgopher
 
-type store interface {
+// Store is an interface to store tasks
+type Store interface {
 	init()
 	load(bool) []*Task
 	save([]*Task)

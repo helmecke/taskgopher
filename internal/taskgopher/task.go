@@ -35,7 +35,7 @@ type Task struct {
 	Notes       []string   `json:"notes,omitempty"`
 }
 
-// NewTask returns a new task
+// NewTask is creating a new task
 func NewTask(filter *Filter) *Task {
 	now := time.Now()
 	task := &Task{
@@ -53,6 +53,7 @@ func NewTask(filter *Filter) *Task {
 	return task
 }
 
+// EditTask is modifying a existing task
 func EditTask(task *Task, filter *Filter) {
 	now := time.Now()
 	task.Modified = &now

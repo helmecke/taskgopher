@@ -13,15 +13,15 @@ var modifyCmd = &cobra.Command{
 	Use:     "modify",
 	Aliases: []string{"mod"},
 	Short:   "Modify a task",
-	RunE:    modify,
+	RunE:    modifyRunE,
 }
 
 func init() {
 	rootCmd.AddCommand(modifyCmd)
 }
 
-func modify(cmd *cobra.Command, args []string) error {
-	if err := tg.NewApp(config.Config.DataDir).Modify(args); err != nil {
+func modifyRunE(_ *cobra.Command, args []string) error {
+	if err := tg.NewApp(config.Config.DataDir).ModifyTask(args); err != nil {
 		return fmt.Errorf("failed to modify task: %w", err)
 	}
 

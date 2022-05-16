@@ -19,8 +19,8 @@ func init() {
 	rootCmd.AddCommand(addCmd)
 }
 
-func addRunE(cmd *cobra.Command, args []string) error {
-	if err := tg.NewApp(config.Config.DataDir).Add(args); err != nil {
+func addRunE(_ *cobra.Command, args []string) error {
+	if err := tg.NewApp(config.Config.DataDir).AddTask(args); err != nil {
 		return fmt.Errorf("failed to add task: %w", err)
 	}
 

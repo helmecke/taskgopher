@@ -1,87 +1,62 @@
 linters:
-  enable:
-    - asciicheck
-    - bidichk
-    - bodyclose
-    - contextcheck
-    # - cyclop
-    - deadcode # (default)
-    - depguard
-    - dogsled
-    - dupl
-    - durationcheck
-    - errcheck # (default)
-    - errname
-    - errorlint
-    - exhaustive
-    # - exhaustivestruct # (deprecated)
-    # - exhaustruct
-    - exportloopref
-    # - forbidigo
-    - forcetypeassert
-    # - funlen
-    - gci
-    # - gochecknoglobals # (cobra)
-    # - gochecknoinits # (cobra)
-    - gocognit
-    - goconst
-    - gocritic
-    - gocyclo
-    # - godot # (cobra)
-    - godox
-    - goerr113
-    - gofmt
-    # - gofumpt
-    - goheader
-    - goimports
-    # - golint # (deprecated)
-    # - gomnd # (this is hard)
-    - gomoddirectives
-    - gomodguard
-    - goprintffuncname
-    - gosec
-    - gosimple # (default)
-    - govet # (default)
-    - ifshort
-    - importas
-    - ineffassign # (default)
-    # - interfacer # (deprecated)
-    - ireturn
-    # - lll
-    - makezero
-    # - maligned # (deprecated)
-    - misspell
-    - nakedret
-    # - nestif
-    - nilerr
-    - nilnil
-    - nlreturn
-    - noctx
-    - nolintlint
-    - nosprintfhostport
-    - paralleltest
-    - prealloc
-    - predeclared
-    - promlinter
-    - revive
-    - rowserrcheck
-    # - scopelint # (deprecated)
-    - sqlclosecheck
-    - staticcheck # (default)
-    - structcheck # (default)
-    - stylecheck
-    - tagliatelle
-    - tenv
-    - testpackage
-    - thelper
-    - tparallel
-    - typecheck # (default)
-    - unconvert
-    - unparam
-    - unused # (default)
-    - varcheck # (varcheck)
-    # - varnamelen
-    - wastedassign
-    - whitespace
-    - wrapcheck
-    # - wsl # (maintenace mode)
+  enable-all: true
+  disable:
+    - cyclop
+    - exhaustivestruct # (deprecated)
+    - exhaustruct # dont see the point
+    - forbidigo # print is not always for debugging
+    - funlen # use revive for this
+    - gochecknoglobals # (cobra)
+    - gochecknoinits # (cobra)
+    - godot # (cobra)
+    - gofumpt # seems buggy
+    - golint # (deprecated)
+    - gomnd # (this is hard)
+    - interfacer # (deprecated)
+    - lll # use revive for this
+    - maligned # (deprecated)
+    - nestif
+    - nonamedreturns # i find named returns helpful
+    - scopelint # (deprecated)
+    - varnamelen # i like short variables
+    - wsl # (maintenace mode)
+
+linters-settings:
+  revive:
+    confidence: 0.8
+    errorCode: 0
+    warningCode: 0
+    rules:
+      - name: exported
+      - name: blank-imports
+      - name: context-as-argument
+      - name: context-keys-type
+      - name: dot-imports
+      - name: error-return
+      - name: error-strings
+      - name: error-naming
+      - name: exported
+      - name: if-return
+      - name: increment-decrement
+      - name: var-naming
+      - name: var-declaration
+      - name: package-comments
+      - name: range
+      - name: receiver-naming
+      - name: time-naming
+      - name: unexported-return
+      - name: indent-error-flow
+      - name: errorf
+      - name: empty-block
+      - name: superfluous-else
+      - name: unused-parameter
+      - name: unreachable-code
+      - name: redefines-builtin-id
+
+issues:
+  # include issues excluded by default: golangci-lint run -help
+  include:
+    - EXC0012
+    - EXC0013
+    - EXC0014
+    - EXC0015
