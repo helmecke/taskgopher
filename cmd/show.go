@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
 
-	markdown "github.com/MichaelMure/go-term-markdown"
+	"github.com/helmecke/taskgopher/internal/config"
+	tg "github.com/helmecke/taskgopher/internal/taskgopher"
 	"github.com/spf13/cobra"
 )
 
@@ -12,24 +12,17 @@ import (
 var showCmd = &cobra.Command{
 	Use:   "show",
 	Short: "Show details of a task",
-	Args:  cobra.ExactArgs(1),
-	RunE:  show,
+	RunE:  showRunE,
 }
 
 func init() {
 	rootCmd.AddCommand(showCmd)
 }
 
-func show(cmd *cobra.Command, args []string) error {
-	path := "README.md"
-	source, err := ioutil.ReadFile(path)
-	if err != nil {
-		panic(err)
+func showRunE(_ *cobra.Command, args []string) error {
+	if err := tg.NewApp(config.Config.DataDir).ShowTask(args); err != nil {
+		return fmt.Errorf("failed to show task: %w", err)
 	}
-
-	result := markdown.Render(string(source), 80, 6)
-
-	fmt.Printf("%s", result)
 
 	return nil
 }

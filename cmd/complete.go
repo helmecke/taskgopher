@@ -21,8 +21,8 @@ func init() {
 	rootCmd.AddCommand(doneCmd)
 }
 
-func completeRunE(cmd *cobra.Command, args []string) error {
-	if err := tg.NewApp(config.Config.DataDir).Complete(args); err != nil {
+func completeRunE(_ *cobra.Command, args []string) error {
+	if err := tg.NewApp(config.Config.DataDir).CompleteTask(args); err != nil {
 		return fmt.Errorf("failed to complete task: %w", err)
 	}
 

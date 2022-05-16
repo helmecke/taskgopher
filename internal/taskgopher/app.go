@@ -4,24 +4,27 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+
+	"github.com/manifoldco/promptui"
 )
 
+// App is the structure of the taskgopher app
 type App struct {
-	TaskStore store
-	TaskList  TaskList
-	Printer   Printer
+	TaskList TaskList
+	Store    Store
+	Printer  Printer
 }
 
-// NewApp creates a new Taskgopher app.
+// NewApp is creating the taskgopher app
 func NewApp(location string) *App {
 	return &App{
-		TaskStore: newFileStore(location),
-		Printer:   newScreenPrinter(),
+		Store:   newFileStore(location),
+		Printer: newScreenPrinter(),
 	}
 }
 
-// Add task to task list
-func (a *App) Add(args []string) error {
+// AddTask is creating a task
+func (a *App) AddTask(args []string) error {
 	a.load(false)
 
 	parser := &Parser{}
@@ -38,8 +41,8 @@ func (a *App) Add(args []string) error {
 	return nil
 }
 
-// Modify task to task list
-func (a *App) Modify(args []string) error {
+// ModifyTask is modifying a task
+func (a *App) ModifyTask(args []string) error {
 	id, err := strconv.Atoi(args[0])
 	if err != nil {
 		log.Fatal(err)
@@ -61,8 +64,8 @@ func (a *App) Modify(args []string) error {
 	return nil
 }
 
-// Complete task to task list
-func (a *App) Complete(args []string) error {
+// CompleteTask is completing a task
+func (a *App) CompleteTask(args []string) error {
 	id, err := strconv.Atoi(args[0])
 	if err != nil {
 		log.Fatal(err)
@@ -79,8 +82,19 @@ func (a *App) Complete(args []string) error {
 	return nil
 }
 
-// Delete task from task list
-func (a *App) Delete(args []string) error {
+// DeleteTask is deleting a task
+func (a *App) DeleteTask(args []string) error {
+	prompt := promptui.Prompt{
+		Label:     "Delete task",
+		IsConfirm: true,
+	}
+
+	if _, err := prompt.Run(); err != nil {
+		fmt.Println("Aborted...")
+
+		return nil
+	}
+
 	id, err := strconv.Atoi(args[0])
 	if err != nil {
 		log.Fatal(err)
@@ -98,47 +112,13 @@ func (a *App) Delete(args []string) error {
 	return nil
 }
 
-// Start task from task list
-func (a *App) Start(args []string) error {
-	id, err := strconv.Atoi(args[0])
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	a.load(false)
-
-	task := a.TaskList.get(id)
-	task.start()
-
-	a.TaskList.set(task)
-	fmt.Printf("Started task %d.\n", task.ID)
-	a.save()
-
+// ShowTask is showing details of a task
+func (a *App) ShowTask(args []string) error {
 	return nil
 }
 
-// Stop task from task list
-func (a *App) Stop(args []string) error {
-	id, err := strconv.Atoi(args[0])
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	a.load(false)
-
-	task := a.TaskList.get(id)
-	task.stop()
-
-	a.TaskList.set(task)
-	a.save()
-
-	fmt.Printf("Stopped task %d.\n", task.ID)
-
-	return nil
-}
-
-// List all takss
-func (a *App) List(args []string, all bool) error {
+// ListTasks is listing tasks
+func (a *App) ListTasks(args []string, all bool) error {
 	a.garbageCollect()
 	a.clear()
 	a.load(all)
@@ -156,13 +136,13 @@ func (a *App) List(args []string, all bool) error {
 }
 
 func (a *App) load(all bool) {
-	tasks := a.TaskStore.load(all)
+	tasks := a.Store.load(all)
 
 	a.TaskList.load(tasks)
 }
 
 func (a *App) save() {
-	a.TaskStore.save(a.TaskList.Tasks)
+	a.Store.save(a.TaskList.Tasks)
 }
 
 func (a *App) clear() {
@@ -174,7 +154,7 @@ func (a *App) garbageCollect() {
 	completed := a.TaskList.garbageCollect()
 	for _, task := range completed {
 		fmt.Printf("%+v\n", task)
-		a.TaskStore.complete(task)
+		a.Store.complete(task)
 	}
 	a.save()
 }

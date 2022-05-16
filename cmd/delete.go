@@ -5,7 +5,6 @@ import (
 
 	"github.com/helmecke/taskgopher/internal/config"
 	tg "github.com/helmecke/taskgopher/internal/taskgopher"
-	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 )
 
@@ -21,21 +20,10 @@ func init() {
 	rootCmd.AddCommand(deleteCmd)
 }
 
-func deleteRunE(cmd *cobra.Command, args []string) error {
-	prompt := promptui.Prompt{
-		Label:     "Delete task",
-		IsConfirm: true,
+func deleteRunE(_ *cobra.Command, args []string) error {
+	if err := tg.NewApp(config.Config.DataDir).DeleteTask(args); err != nil {
+		return fmt.Errorf("failed to delete task: %w", err)
 	}
-
-	if _, err := prompt.Run(); err == nil {
-		if err := tg.NewApp(config.Config.DataDir).Delete(args); err != nil {
-			return fmt.Errorf("failed to delete task: %w", err)
-		}
-
-		return nil
-	}
-
-	fmt.Println("Aborted...")
 
 	return nil
 }

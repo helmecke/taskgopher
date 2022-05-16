@@ -19,7 +19,7 @@ var listCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 	},
-	RunE: list,
+	RunE: listRunE,
 }
 
 func init() {
@@ -27,8 +27,8 @@ func init() {
 	listCmd.Flags().BoolP("all", "A", false, `List all tasks.`)
 }
 
-func list(cmd *cobra.Command, args []string) error {
-	if err := tg.NewApp(config.Config.DataDir).List(args, viper.GetBool("all")); err != nil {
+func listRunE(_ *cobra.Command, args []string) error {
+	if err := tg.NewApp(config.Config.DataDir).ListTasks(args, viper.GetBool("all")); err != nil {
 		return fmt.Errorf("failed to list tasks: %w", err)
 	}
 
