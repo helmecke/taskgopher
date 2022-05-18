@@ -1,9 +1,7 @@
 package taskgopher
 
 import (
-	"fmt"
 	"math"
-	"strconv"
 	"time"
 
 	"github.com/google/uuid"
@@ -132,11 +130,14 @@ func (t *Task) urgency() {
 	t.Urgency = urgency
 }
 
-func (t *Task) table() []string {
-	return []string{
-		fmt.Sprint(t.ID),
-		timeutils.Diff(time.Now(), *t.Created),
-		t.Description,
-		strconv.FormatFloat(t.Urgency, 'f', -1, 64),
-	}
+func (t *Task) age() string {
+	return timeutils.Diff(time.Now(), *t.Created, false)
+}
+
+func (t *Task) lastModified() string {
+	return timeutils.Diff(time.Now(), *t.Modified, false)
+}
+
+func (t *Task) due() string {
+	return timeutils.Diff(time.Now(), *t.Due, true)
 }

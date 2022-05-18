@@ -19,7 +19,7 @@ type App struct {
 func NewApp(location string) *App {
 	return &App{
 		Store:   newFileStore(location),
-		Printer: newScreenPrinter(),
+		Printer: NewScreenPrinter(),
 	}
 }
 
@@ -114,6 +114,16 @@ func (a *App) DeleteTask(args []string) error {
 
 // ShowTask is showing details of a task
 func (a *App) ShowTask(args []string) error {
+	id, err := strconv.Atoi(args[0])
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	a.load(false)
+
+	task := a.TaskList.get(id)
+	a.Printer.PrintTask(task)
+
 	return nil
 }
 

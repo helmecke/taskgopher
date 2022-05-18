@@ -3,17 +3,15 @@ module github.com/helmecke/taskgopher
 go 1.12
 
 require (
-	github.com/MichaelMure/go-term-markdown v0.1.3
 	github.com/adrg/xdg v0.2.1
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/google/uuid v1.1.2
+	github.com/jedib0t/go-pretty/v6 v6.3.1
 	github.com/kr/pretty v0.2.1 // indirect
 	github.com/magiconair/properties v1.8.2 // indirect
 	github.com/manifoldco/promptui v0.8.0
 	github.com/mattn/go-colorable v0.1.7 // indirect
-	github.com/mattn/go-runewidth v0.0.9 // indirect
 	github.com/mitchellh/mapstructure v1.3.3 // indirect
-	github.com/olekukonko/tablewriter v0.0.4
 	github.com/olivere/ndjson v0.1.3
 	github.com/pelletier/go-toml v1.8.1 // indirect
 	github.com/spf13/afero v1.3.5 // indirect
