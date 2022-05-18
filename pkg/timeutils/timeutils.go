@@ -6,9 +6,19 @@ import (
 )
 
 // Diff returns duration between two dates as string.
-func Diff(a, b time.Time) string {
+func Diff(a, b time.Time, sign bool) string {
 	if a.Location() != b.Location() {
 		b = b.In(a.Location())
+	}
+
+	after := ""
+
+	if sign {
+		after = "+"
+	}
+
+	if sign && a.After(b) {
+		after = "-"
 	}
 
 	if a.After(b) {
@@ -57,31 +67,31 @@ func Diff(a, b time.Time) string {
 	}
 
 	if year > 0 {
-		return strconv.Itoa(year) + "y"
+		return after + strconv.Itoa(year) + "y"
 	}
 
 	if month > 0 {
-		return strconv.Itoa(month) + "M"
+		return after + strconv.Itoa(month) + "M"
 	}
 
 	if day > 0 {
 		if day >= 7 {
-			return strconv.Itoa(day/7) + "w"
+			return after + strconv.Itoa(day/7) + "w"
 		}
 
-		return strconv.Itoa(day) + "d"
+		return after + strconv.Itoa(day) + "d"
 	}
 
 	if hour > 0 {
-		return strconv.Itoa(hour) + "h"
+		return after + strconv.Itoa(hour) + "h"
 	}
 
 	if min > 0 {
-		return strconv.Itoa(min) + "m"
+		return after + strconv.Itoa(min) + "m"
 	}
 
 	if sec > 0 {
-		return strconv.Itoa(sec) + "s"
+		return after + strconv.Itoa(sec) + "s"
 	}
 
 	return ""
