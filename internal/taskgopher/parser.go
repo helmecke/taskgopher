@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-const RFC3339FullDate = "2006-01-02"
+const rfc3339FullDate = "2006-01-02"
 
 // A Parser parses
 type Parser struct{}
@@ -37,7 +37,7 @@ func (p *Parser) ParseArgs(args []string) (*Filter, error) {
 		if strings.HasPrefix(arg, "due:") {
 			match = true
 			filter.HasDue = true
-			date, err := time.Parse(RFC3339FullDate, arg[4:])
+			date, err := time.Parse(rfc3339FullDate, arg[4:])
 			date = date.Local()
 			if err != nil {
 				log.Fatal(err)
