@@ -13,7 +13,6 @@ const (
 	statusCompleted = "completed"
 	statusDeleted   = "deleted"
 	statusStarted   = "started"
-	statusPaused    = "paused"
 )
 
 // A Task is an item
@@ -80,14 +79,6 @@ func (t *Task) complete() {
 
 func (t *Task) delete() {
 	t.Status = statusDeleted
-}
-
-func (t *Task) start() {
-	t.Status = statusStarted
-}
-
-func (t *Task) stop() {
-	t.Status = statusPaused
 }
 
 func (t *Task) urgency() {
