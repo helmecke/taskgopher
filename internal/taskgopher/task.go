@@ -17,24 +17,23 @@ const (
 
 // A Task is an item
 type Task struct {
-	ID          int        `json:"-"`
-	UUID        uuid.UUID  `json:"uuid"`
-	Description string     `json:"description"`
-	Status      string     `json:"status"`
-	Created     *time.Time `json:"created"`
-	Modified    *time.Time `json:"modified,omitempty"`
-	Completed   *time.Time `json:"completed,omitempty"`
-	Due         *time.Time `json:"due,omitempty"`
-	Tags        []string   `json:"tags,omitempty"`
-	Project     string     `json:"project,omitempty"`
-	Contexts    []string   `json:"contexts,omitempty"`
-	Urgency     float64    `json:"-"`
-	Notes       []string   `json:"notes,omitempty"`
+	ID          int       `json:"-"`
+	UUID        uuid.UUID `json:"uuid"`
+	Description string    `json:"description"`
+	Status      string    `json:"status"`
+	Created     time.Time `json:"created"`
+	Modified    time.Time `json:"modified,omitempty"`
+	Completed   time.Time `json:"completed,omitempty"`
+	Due         time.Time `json:"due,omitempty"`
+	Tags        []string  `json:"tags,omitempty"`
+	Project     string    `json:"project,omitempty"`
+	Contexts    []string  `json:"contexts,omitempty"`
+	Urgency     float64   `json:"-"`
+	Notes       []string  `json:"notes,omitempty"`
 }
 
 // NewTask is creating a new task
 func NewTask(filter *Filter) *Task {
-	now := time.Now()
 	task := &Task{
 		UUID:        uuid.New(),
 		Description: filter.Description,
@@ -42,7 +41,7 @@ func NewTask(filter *Filter) *Task {
 		Tags:        filter.Tags,
 		Contexts:    filter.Contexts,
 		Status:      statusPending,
-		Created:     &now,
+		Created:     time.Now(),
 	}
 
 	task.urgency()
@@ -53,7 +52,7 @@ func NewTask(filter *Filter) *Task {
 // EditTask is modifying a existing task
 func EditTask(task *Task, filter *Filter) {
 	now := time.Now()
-	task.Modified = &now
+	task.Modified = now
 
 	if filter.HasDue {
 		task.Due = filter.Due
@@ -73,7 +72,7 @@ func EditTask(task *Task, filter *Filter) {
 
 func (t *Task) complete() {
 	now := time.Now()
-	t.Completed = &now
+	t.Completed = now
 	t.Status = statusCompleted
 }
 
@@ -100,7 +99,7 @@ func (t *Task) urgency() {
 
 	urgency := 0.0
 
-	if t.Due != nil {
+	if !t.Due.IsZero() {
 		urgency += u["due"]
 	}
 
@@ -108,7 +107,7 @@ func (t *Task) urgency() {
 		urgency += u[statusStarted]
 	}
 
-	urgency += math.Floor(u["age"] * (time.Since(*t.Created).Hours() / 24 / 39))
+	urgency += math.Floor(u["age"] * (time.Since(t.Created).Hours() / 24 / 39))
 
 	if len(t.Tags) > 0 {
 		urgency += u["tags"]
@@ -122,13 +121,13 @@ func (t *Task) urgency() {
 }
 
 func (t *Task) age() string {
-	return timeutils.Diff(time.Now(), *t.Created, false)
+	return timeutils.Diff(time.Now(), t.Created, false)
 }
 
 func (t *Task) lastModified() string {
-	return timeutils.Diff(time.Now(), *t.Modified, false)
+	return timeutils.Diff(time.Now(), t.Modified, false)
 }
 
 func (t *Task) due() string {
-	return timeutils.Diff(time.Now(), *t.Due, true)
+	return timeutils.Diff(time.Now(), t.Due, true)
 }

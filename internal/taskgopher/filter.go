@@ -10,7 +10,7 @@ type Filter struct {
 	HasDue          bool
 	HasContexts     bool
 	HasTags         bool
-	Due             *time.Time
+	Due             time.Time
 	Contexts        []string
 	ExcludeContexts []string
 	Tags            []string

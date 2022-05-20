@@ -42,7 +42,7 @@ func (p *Parser) ParseArgs(args []string) (*Filter, error) {
 			if err != nil {
 				log.Fatal(err)
 			}
-			filter.Due = &date
+			filter.Due = date
 		}
 
 		if !match {
