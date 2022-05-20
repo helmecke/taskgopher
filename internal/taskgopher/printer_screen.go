@@ -25,15 +25,15 @@ func (s *ScreenPrinter) PrintTask(task *Task) {
 	t.AppendRow(table.Row{"Status", task.Status})
 	t.AppendRow(table.Row{"Created", task.Created.Format("2006-01-02 15:04:05") + " (" + task.age() + ")"})
 
-	if task.Modified != nil {
+	if !task.Modified.IsZero() {
 		t.AppendRow(table.Row{"Modified", task.Modified.Format("2006-01-02 15:04:05") + " (" + task.lastModified() + ")"})
 	}
 
-	if task.Completed != nil {
+	if !task.Completed.IsZero() {
 		t.AppendRow(table.Row{"Completed", task.Completed})
 	}
 
-	if task.Due != nil {
+	if !task.Due.IsZero() {
 		t.AppendRow(table.Row{"Due", task.Due.Format("2006-01-02 15:04:05") + " (" + task.due() + ")"})
 	}
 
