@@ -92,6 +92,7 @@ func (a *App) DeleteTask(args []string) error {
 	if _, err := prompt.Run(); err != nil {
 		fmt.Println("Aborted...")
 
+		// nolint:nilerr
 		return nil
 	}
 

@@ -55,6 +55,7 @@ func (t *TaskList) garbageCollect() (completed []*Task) {
 	return completed
 }
 
+// ByUrgency holds tasks sorted by urgency
 type ByUrgency []*Task
 
 func (a ByUrgency) Len() int      { return len(a) }
@@ -63,6 +64,7 @@ func (a ByUrgency) Less(i, j int) bool {
 	return a[i].Urgency > a[j].Urgency
 }
 
+// ByUrgency returns tasks sorted by urgency
 func (t *TaskList) ByUrgency() []*Task {
 	sort.Sort(ByUrgency(t.Tasks))
 
