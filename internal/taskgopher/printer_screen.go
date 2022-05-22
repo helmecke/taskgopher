@@ -7,12 +7,15 @@ import (
 	"github.com/jedib0t/go-pretty/v6/table"
 )
 
+// ScreenPrinter is the structure of the screen printer
 type ScreenPrinter struct{}
 
+// NewScreenPrinter is creating the screen printer
 func NewScreenPrinter() *ScreenPrinter {
 	return &ScreenPrinter{}
 }
 
+// PrintTask is printing detailed information on a task
 func (s *ScreenPrinter) PrintTask(task *Task) {
 	fmt.Println("")
 	t := table.NewWriter()
@@ -55,6 +58,7 @@ func (s *ScreenPrinter) PrintTask(task *Task) {
 	fmt.Println("")
 }
 
+// PrintTaskList is printing general information on all tasks
 func (s *ScreenPrinter) PrintTaskList(tasks []*Task) {
 	if len(tasks) > 0 {
 		fmt.Println("")

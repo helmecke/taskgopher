@@ -99,6 +99,7 @@ func Diff(a, b time.Time, sign bool) string {
 }
 
 // Abbr return time of date abbreviation
+// nolint:gocyclo
 func Abbr(abbr string, pointInTime time.Time) time.Time {
 	switch abbr {
 	// now	Current local date and time.
