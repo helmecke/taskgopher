@@ -11,6 +11,10 @@ func (t *TaskList) load(tasks []*Task) {
 	} else {
 		t.Tasks = tasks
 	}
+
+	for _, task := range t.Tasks {
+		task.urgency()
+	}
 }
 
 func (t *TaskList) add(task *Task) int {

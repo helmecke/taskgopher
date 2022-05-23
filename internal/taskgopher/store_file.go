@@ -56,7 +56,6 @@ func (f *fileStore) load(all bool) (tasks []*Task) {
 			return
 		}
 		task.ID = i
-		task.urgency()
 		tasks = append(tasks, task)
 	}
 
