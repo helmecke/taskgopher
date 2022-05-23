@@ -67,6 +67,9 @@ func (s *ScreenPrinter) PrintTaskList(tasks []*Task) {
 		t.SetOutputMirror(os.Stdout)
 		t.SetStyle(table.StyleLight)
 		t.Style().Options.DrawBorder = false
+		t.SortBy([]table.SortBy{
+			{Name: "Urgency", Mode: table.DscNumeric},
+		})
 		t.AppendHeader(table.Row{"ID", "Age", "Title", "Urgency"})
 		for _, task := range tasks {
 			t.AppendRow(table.Row{task.ID, task.age(), task.Description, task.Urgency})

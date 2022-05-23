@@ -138,7 +138,7 @@ func (a *App) ListTasks(args []string, all bool) error {
 	if err != nil {
 		return err
 	}
-	taskFilter := &TaskFilter{Tasks: a.TaskList.ByUrgency(), Filter: filter}
+	taskFilter := &TaskFilter{Tasks: a.TaskList.Tasks, Filter: filter}
 	tasks := taskFilter.ApplyFilter()
 
 	a.Printer.PrintTaskList(tasks)
