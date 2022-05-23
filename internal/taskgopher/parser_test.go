@@ -24,7 +24,7 @@ func TestDue(t *testing.T) {
 	parser := &taskgopher.Parser{}
 	filter, _ := parser.ParseArgs(strings.Split("here is the subject due:2022-06-01", " "))
 
-	assert.Equal(time.Date(2022, time.June, 1, 2, 0, 0, 0, time.Local), filter.Due)
+	assert.Equal(time.Date(2022, time.June, 1, 0, 0, 0, 0, time.UTC), filter.Due)
 }
 
 func TestTag(t *testing.T) {
