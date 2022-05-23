@@ -3,6 +3,7 @@ package taskgopher
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/jedib0t/go-pretty/v6/table"
 )
@@ -53,6 +54,10 @@ func (s *ScreenPrinter) PrintTask(task *Task) {
 	}
 
 	t.AppendRow(table.Row{"Urgency", task.Urgency})
+
+	if len(task.Tags) > 0 {
+		t.AppendRow(table.Row{"VirtualTags", strings.Join(task.VirtualTags, " ")})
+	}
 
 	t.Render()
 	fmt.Println("")

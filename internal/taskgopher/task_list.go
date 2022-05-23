@@ -14,6 +14,7 @@ func (t *TaskList) load(tasks []*Task) {
 
 	for _, task := range t.Tasks {
 		task.urgency()
+		task.generateVirtualTags()
 	}
 }
 
