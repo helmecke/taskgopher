@@ -38,7 +38,6 @@ func (p *Parser) ParseArgs(args []string) (*Filter, error) {
 			match = true
 			filter.HasDue = true
 			date, err := time.Parse(rfc3339FullDate, arg[4:])
-			date = date.Local()
 			if err != nil {
 				log.Fatal(err)
 			}
