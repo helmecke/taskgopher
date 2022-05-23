@@ -43,8 +43,6 @@ func NewTask(filter *Filter) *Task {
 		Created:     time.Now(),
 	}
 
-	task.urgency()
-
 	return task
 }
 
