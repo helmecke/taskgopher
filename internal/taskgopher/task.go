@@ -12,7 +12,6 @@ const (
 	statusPending   = "pending"
 	statusCompleted = "completed"
 	statusDeleted   = "deleted"
-	statusStarted   = "started"
 )
 
 // A Task is an item
@@ -101,10 +100,6 @@ func (t *Task) urgency() {
 
 	if !t.Due.IsZero() {
 		urgency += u["due"]
-	}
-
-	if t.Status == statusStarted {
-		urgency += u[statusStarted]
 	}
 
 	urgency += math.Floor(u["age"] * (time.Since(t.Created).Hours() / 24 / 39))
