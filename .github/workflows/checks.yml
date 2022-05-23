@@ -56,5 +56,5 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: 1.18.x
-      - name: Run tests with coverage
-        run: go test -v -race -coverprofile=coverage -covermode=atomic ./...
+      - name: Test
+        run: go test ./...
