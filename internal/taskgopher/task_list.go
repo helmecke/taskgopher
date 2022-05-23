@@ -1,9 +1,5 @@
 package taskgopher
 
-import (
-	"sort"
-)
-
 // TaskList hold n task
 type TaskList struct {
 	Tasks []*Task
@@ -53,20 +49,4 @@ func (t *TaskList) garbageCollect() (completed []*Task) {
 	t.Tasks = tasks
 
 	return completed
-}
-
-// ByUrgency holds tasks sorted by urgency
-type ByUrgency []*Task
-
-func (a ByUrgency) Len() int      { return len(a) }
-func (a ByUrgency) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
-func (a ByUrgency) Less(i, j int) bool {
-	return a[i].Urgency > a[j].Urgency
-}
-
-// ByUrgency returns tasks sorted by urgency
-func (t *TaskList) ByUrgency() []*Task {
-	sort.Sort(ByUrgency(t.Tasks))
-
-	return t.Tasks
 }
