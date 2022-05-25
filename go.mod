@@ -9,7 +9,7 @@ require (
 	github.com/kr/pretty v0.2.1 // indirect
 	github.com/manifoldco/promptui v0.9.0
 	github.com/olivere/ndjson v1.0.1
-	github.com/spf13/cobra v1.0.0
+	github.com/spf13/cobra v1.4.0
 	github.com/spf13/viper v1.11.0
 	github.com/stretchr/testify v1.7.1
 )
