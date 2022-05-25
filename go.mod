@@ -3,7 +3,7 @@ module github.com/helmecke/taskgopher
 go 1.12
 
 require (
-	github.com/adrg/xdg v0.2.1
+	github.com/adrg/xdg v0.4.0
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/google/uuid v1.1.2
 	github.com/jedib0t/go-pretty/v6 v6.3.1
@@ -21,7 +21,6 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.7.1
-	golang.org/x/sys v0.0.0-20200909081042-eff7692f9009 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/ini.v1 v1.61.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
