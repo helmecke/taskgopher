@@ -20,8 +20,8 @@ func init() {
 	rootCmd.AddCommand(deleteCmd)
 }
 
-func deleteRunE(_ *cobra.Command, args []string) error {
-	if err := tg.NewApp(config.Config.DataDir).DeleteTask(args); err != nil {
+func deleteRunE(_ *cobra.Command, _ []string) error {
+	if err := tg.NewApp(config.Config.DataDir).DeleteTask(filter); err != nil {
 		return fmt.Errorf("failed to delete task: %w", err)
 	}
 
