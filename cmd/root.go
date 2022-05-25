@@ -1,11 +1,10 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
-	"strconv"
 
 	"github.com/helmecke/taskgopher/internal/config"
+	tg "github.com/helmecke/taskgopher/internal/taskgopher"
 	"github.com/spf13/cobra"
 )
 
@@ -17,28 +16,21 @@ var rootCmd = &cobra.Command{
 	RunE: listRunE,
 }
 
+// TODO: replace if cobra 1.5 hits - https://github.com/spf13/cobra/pull/1551
+var filter *tg.Filter
+
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	cmd, _, err := rootCmd.Find(os.Args[1:])
-	if err != nil || cmd == nil {
-		if _, err := strconv.Atoi(os.Args[1]); err == nil {
-			if len(os.Args[1:]) == 1 {
-				rootCmd.SetArgs(append([]string{"show"}, os.Args[1:]...))
-			}
-
-			if len(os.Args[1:]) == 2 {
-				rootCmd.SetArgs([]string{os.Args[2], os.Args[1]})
-			}
-
-			if len(os.Args[1:]) > 2 {
-				rootCmd.SetArgs(append([]string{os.Args[2], os.Args[1]}, os.Args[3:]...))
-			}
-		}
+	parser := &tg.Parser{}
+	cmd, f, err := parser.ParseArgs(os.Args)
+	if err != nil || cmd != "" {
+		rootCmd.SetArgs(append([]string{cmd}, os.Args...))
 	}
 
+	filter = f
+
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
 		os.Exit(1)
 	}
 }

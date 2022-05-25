@@ -33,15 +33,15 @@ type Task struct {
 }
 
 // NewTask is creating a new task
-func NewTask(filter *Filter) *Task {
+func NewTask(_ *Filter) *Task {
 	task := &Task{
-		UUID:        uuid.New(),
-		Description: filter.Description,
-		Due:         filter.Due,
-		Tags:        filter.Tags,
-		Contexts:    filter.Contexts,
-		Status:      statusPending,
-		Created:     time.Now(),
+		UUID: uuid.New(),
+		// Description: filter.Description,
+		// Due:         filter.Due,
+		// Tags:        filter.Tags,
+		// Contexts:    filter.Contexts,
+		Status:  statusPending,
+		Created: time.Now(),
 	}
 
 	return task
@@ -126,6 +126,7 @@ func (t *Task) due() string {
 	return timeutils.Diff(time.Now(), t.Due, true)
 }
 
+// nolint:gocognit
 func (t *Task) generateVirtualTags() {
 	// DUE - Does the task have a due date?
 	if !t.Due.IsZero() {

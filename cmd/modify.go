@@ -20,8 +20,8 @@ func init() {
 	rootCmd.AddCommand(modifyCmd)
 }
 
-func modifyRunE(_ *cobra.Command, args []string) error {
-	if err := tg.NewApp(config.Config.DataDir).ModifyTask(args); err != nil {
+func modifyRunE(_ *cobra.Command, _ []string) error {
+	if err := tg.NewApp(config.Config.DataDir).ModifyTask(filter); err != nil {
 		return fmt.Errorf("failed to modify task: %w", err)
 	}
 

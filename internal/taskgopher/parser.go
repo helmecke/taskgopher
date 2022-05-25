@@ -2,40 +2,64 @@ package taskgopher
 
 import (
 	"log"
+	"strconv"
 	"strings"
 	"time"
 )
 
 const rfc3339FullDate = "2006-01-02"
 
+var filterCommands = []string{
+	"add",
+	"complete",
+	"delete",
+	"list",
+	"modify",
+	"show",
+}
+
 // A Parser parses
 type Parser struct{}
 
 // ParseArgs parses args
-func (p *Parser) ParseArgs(args []string) (*Filter, error) {
-	filter := &Filter{
-		HasDue: false,
-	}
-
-	var descriptionMatches []string
+func (p *Parser) ParseArgs(args []string) (string, *Filter, error) {
+	filter := &Filter{}
+	cmd := ""
 
 	for _, arg := range args {
-		match := false
+		lowerCased := strings.ToLower(arg)
+
+		if cmd == "" && contains(filterCommands, lowerCased) {
+			cmd = lowerCased
+
+			// break here to only parse args before filterCommands, to enforce
+			// taskgopher <filter> list
+			break
+		}
+
+		if s, err := strconv.ParseInt(arg, 10, 64); err == nil {
+			filter.IDs = append(filter.IDs, int(s))
+
+			continue
+		}
+
+		if arg == "all" {
+			filter.All = true
+
+			continue
+		}
 
 		if strings.HasPrefix(arg, "@") {
-			match = true
 			filter.HasContexts = true
 			filter.Contexts = append(filter.Contexts, arg[1:])
 		}
 
 		if strings.HasPrefix(arg, "#") {
-			match = true
 			filter.HasTags = true
 			filter.Tags = append(filter.Tags, arg[1:])
 		}
 
 		if strings.HasPrefix(arg, "due:") {
-			match = true
 			filter.HasDue = true
 			date, err := time.Parse(rfc3339FullDate, arg[4:])
 			if err != nil {
@@ -43,13 +67,18 @@ func (p *Parser) ParseArgs(args []string) (*Filter, error) {
 			}
 			filter.Due = date
 		}
-
-		if !match {
-			descriptionMatches = append(descriptionMatches, arg)
-		}
-
-		filter.Description = strings.Join(descriptionMatches, " ")
 	}
 
-	return filter, nil
+	return cmd, filter, nil
+}
+
+// contains returns true if string is in slice of strings
+func contains(a []string, s string) bool {
+	for _, v := range a {
+		if v == s {
+			return true
+		}
+	}
+
+	return false
 }

@@ -6,6 +6,7 @@ import (
 
 // Filter holds the filtering results
 type Filter struct {
+	IDs             []int
 	Description     string
 	HasDue          bool
 	HasContexts     bool
@@ -15,4 +16,5 @@ type Filter struct {
 	ExcludeContexts []string
 	Tags            []string
 	ExcludeTags     []string
+	All             bool
 }
