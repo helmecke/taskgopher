@@ -7,7 +7,7 @@ require (
 	github.com/google/uuid v1.1.2
 	github.com/jedib0t/go-pretty/v6 v6.3.1
 	github.com/kr/pretty v0.2.1 // indirect
-	github.com/manifoldco/promptui v0.8.0
+	github.com/manifoldco/promptui v0.9.0
 	github.com/olivere/ndjson v0.1.3
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/viper v1.11.0
