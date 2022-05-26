@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/helmecke/taskgopher/pkg/sliceutils"
 )
 
 const rfc3339FullDate = "2006-01-02"
@@ -29,7 +31,7 @@ func (p *Parser) ParseArgs(args []string) (string, *Filter, error) {
 	for _, arg := range args {
 		lowerCased := strings.ToLower(arg)
 
-		if cmd == "" && contains(filterCommands, lowerCased) {
+		if cmd == "" && sliceutils.StrSliceContains(filterCommands, lowerCased) {
 			cmd = lowerCased
 
 			// break here to only parse args before filterCommands, to enforce
@@ -70,15 +72,4 @@ func (p *Parser) ParseArgs(args []string) (string, *Filter, error) {
 	}
 
 	return cmd, filter, nil
-}
-
-// contains returns true if string is in slice of strings
-func contains(a []string, s string) bool {
-	for _, v := range a {
-		if v == s {
-			return true
-		}
-	}
-
-	return false
 }
