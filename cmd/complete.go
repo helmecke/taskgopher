@@ -13,7 +13,6 @@ var doneCmd = &cobra.Command{
 	Use:     "complete",
 	Aliases: []string{"done"},
 	Short:   "Complete a task",
-	Args:    cobra.ExactArgs(1),
 	RunE:    completeRunE,
 }
 
