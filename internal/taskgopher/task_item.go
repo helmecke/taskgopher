@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/helmecke/taskgopher/pkg/sliceutils"
 	"github.com/helmecke/taskgopher/pkg/timeutils"
 )
 
@@ -30,13 +31,14 @@ type Task struct {
 	Urgency     float64   `json:"-"`
 	VirtualTags []string  `json:"-"`
 	Notes       []string  `json:"notes,omitempty"`
+	filtered    bool      `json:"-"`
 }
 
 // NewTask is creating a new task
-func NewTask(_ *Filter) *Task {
+func NewTask(mod *Modification) *Task {
 	task := &Task{
-		UUID: uuid.New(),
-		// Description: filter.Description,
+		UUID:        uuid.New(),
+		Description: mod.Description,
 		// Due:         filter.Due,
 		// Tags:        filter.Tags,
 		// Contexts:    filter.Contexts,
@@ -47,24 +49,19 @@ func NewTask(_ *Filter) *Task {
 	return task
 }
 
-// EditTask is modifying a existing task
-func EditTask(task *Task, filter *Filter) {
-	now := time.Now()
-	task.Modified = now
+func (t *Task) modify(mod *Modification) {
+	t.Modified = time.Now()
 
-	if filter.HasDue {
-		task.Due = filter.Due
-	}
-	if filter.Description != "" {
-		task.Description = filter.Description
+	if mod.hasDescription() {
+		t.Description = mod.Description
 	}
 
-	if len(filter.Tags) > 0 {
-		task.Tags = filter.Tags
+	if mod.hasDue() {
+		t.Due = mod.Due
 	}
 
-	if len(filter.Contexts) > 0 {
-		task.Contexts = filter.Contexts
+	if mod.RemoveDue {
+		t.Due = time.Time{}
 	}
 }
 
@@ -208,4 +205,16 @@ func (t *Task) generateVirtualTags() {
 	// ORPHAN - Does the task contain any orphaned UDA values?
 	// PRIORITY - Does the task have a priority?
 	// LATEST - Is the task the most recently added task?
+}
+
+func (t *Task) matches(filter *Filter) bool {
+	if len(filter.IDs) > 0 && sliceutils.IntSliceContains(filter.IDs, t.ID) {
+		return true
+	}
+
+	if filter.hasDue() && filter.Due.Equal(t.Due) {
+		return true
+	}
+
+	return false
 }

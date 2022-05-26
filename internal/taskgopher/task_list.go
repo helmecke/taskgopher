@@ -5,28 +5,28 @@ type TaskList struct {
 	Tasks []*Task
 }
 
-func (t *TaskList) load(tasks []*Task) {
-	if t.Tasks != nil {
-		t.Tasks = append(t.Tasks, tasks...)
+func (tl *TaskList) load(tasks []*Task) {
+	if tl.Tasks != nil {
+		tl.Tasks = append(tl.Tasks, tasks...)
 	} else {
-		t.Tasks = tasks
+		tl.Tasks = tasks
 	}
 
-	for _, task := range t.Tasks {
+	for _, task := range tl.Tasks {
 		task.urgency()
 		task.generateVirtualTags()
 	}
 }
 
-func (t *TaskList) add(task *Task) int {
-	task.ID = len(t.Tasks) + 1
-	t.Tasks = append(t.Tasks, task)
+func (tl *TaskList) add(task *Task) int {
+	task.ID = len(tl.Tasks) + 1
+	tl.Tasks = append(tl.Tasks, task)
 
 	return task.ID
 }
 
-func (t *TaskList) get(id int) *Task {
-	for _, task := range t.Tasks {
+func (tl *TaskList) get(id int) *Task {
+	for _, task := range tl.Tasks {
 		if id == task.ID {
 			return task
 		}
@@ -35,14 +35,14 @@ func (t *TaskList) get(id int) *Task {
 	return nil
 }
 
-func (t *TaskList) set(task *Task) {
-	t.Tasks[task.ID-1] = task
+func (tl *TaskList) set(task *Task) {
+	tl.Tasks[task.ID-1] = task
 }
 
-func (t *TaskList) garbageCollect() (completed []*Task) {
+func (tl *TaskList) garbageCollect() (completed []*Task) {
 	var tasks []*Task
 
-	for _, task := range t.Tasks {
+	for _, task := range tl.Tasks {
 		if !(task.Status == "deleted" || task.Status == "completed") {
 			tasks = append(tasks, task)
 		}
@@ -51,7 +51,25 @@ func (t *TaskList) garbageCollect() (completed []*Task) {
 			completed = append(completed, task)
 		}
 	}
-	t.Tasks = tasks
+	tl.Tasks = tasks
 
 	return completed
+}
+
+func (tl *TaskList) filter(filter *Filter) {
+	for _, task := range tl.Tasks {
+		if task.matches(filter) || !filter.Found {
+			task.filtered = true
+		}
+	}
+}
+
+func (tl *TaskList) filtered() (tasks []*Task) {
+	for _, task := range tl.Tasks {
+		if task.filtered {
+			tasks = append(tasks, task)
+		}
+	}
+
+	return tasks
 }

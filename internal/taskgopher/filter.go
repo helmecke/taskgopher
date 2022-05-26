@@ -1,20 +1,15 @@
 package taskgopher
 
-import (
-	"time"
-)
+import "time"
 
-// Filter holds the filtering results
+// Filter holds filter results
 type Filter struct {
-	IDs             []int
-	Description     string
-	HasDue          bool
-	HasContexts     bool
-	HasTags         bool
-	Due             time.Time
-	Contexts        []string
-	ExcludeContexts []string
-	Tags            []string
-	ExcludeTags     []string
-	All             bool
+	Found bool
+	IDs   []int
+	Due   time.Time
+	All   bool
+}
+
+func (f *Filter) hasDue() bool {
+	return !f.Due.IsZero()
 }
