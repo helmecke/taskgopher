@@ -26,6 +26,7 @@ func Execute() {
 	parser := tg.NewParser()
 	err := parser.ParseArgs(os.Args)
 	if err != nil || parser.Command != "" {
+		// TODO: cleanup args
 		rootCmd.SetArgs(append([]string{parser.Command}, os.Args...))
 	}
 
