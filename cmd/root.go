@@ -18,17 +18,19 @@ var rootCmd = &cobra.Command{
 
 // TODO: replace if cobra 1.5 hits - https://github.com/spf13/cobra/pull/1551
 var filter *tg.Filter
+var mod *tg.Modification
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	parser := &tg.Parser{}
-	cmd, f, err := parser.ParseArgs(os.Args)
-	if err != nil || cmd != "" {
-		rootCmd.SetArgs(append([]string{cmd}, os.Args...))
+	parser := tg.NewParser()
+	err := parser.ParseArgs(os.Args)
+	if err != nil || parser.Command != "" {
+		rootCmd.SetArgs(append([]string{parser.Command}, os.Args...))
 	}
 
-	filter = f
+	filter = parser.Filter
+	mod = parser.Modification
 
 	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)

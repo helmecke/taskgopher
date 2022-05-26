@@ -12,27 +12,46 @@ import (
 const rfc3339FullDate = "2006-01-02"
 
 var filterCommands = []string{
-	"add",
 	"complete",
 	"delete",
 	"list",
 	"modify",
+	"mod",
 	"show",
 }
 
-// A Parser parses
-type Parser struct{}
+var modifyCommands = []string{
+	"add",
+	"complete",
+	"modify",
+	"mod",
+}
+
+// A Parser parses user input
+type Parser struct {
+	Command      string
+	Filter       *Filter
+	Modification *Modification
+}
+
+// NewParser creates a new argument parser ready to parse inputs
+func NewParser() *Parser {
+	return &Parser{
+		Command:      "",
+		Filter:       &Filter{},
+		Modification: &Modification{},
+	}
+}
 
 // ParseArgs parses args
-func (p *Parser) ParseArgs(args []string) (string, *Filter, error) {
-	filter := &Filter{}
-	cmd := ""
+func (p *Parser) ParseArgs(args []string) (err error) {
+	cmdAtIndex := -1
+	var description []string
 
-	for _, arg := range args {
-		lowerCased := strings.ToLower(arg)
-
-		if cmd == "" && sliceutils.StrSliceContains(filterCommands, lowerCased) {
-			cmd = lowerCased
+	for i, arg := range args {
+		if p.Command == "" && sliceutils.StrSliceContains(filterCommands, arg) {
+			p.Command = arg
+			cmdAtIndex = i
 
 			// break here to only parse args before filterCommands, to enforce
 			// taskgopher <filter> list
@@ -40,36 +59,58 @@ func (p *Parser) ParseArgs(args []string) (string, *Filter, error) {
 		}
 
 		if s, err := strconv.ParseInt(arg, 10, 64); err == nil {
-			filter.IDs = append(filter.IDs, int(s))
+			p.Filter.IDs = append(p.Filter.IDs, int(s))
+			p.Filter.Found = true
 
 			continue
 		}
 
 		if arg == "all" {
-			filter.All = true
+			p.Filter.All = true
 
 			continue
 		}
 
-		if strings.HasPrefix(arg, "@") {
-			filter.HasContexts = true
-			filter.Contexts = append(filter.Contexts, arg[1:])
-		}
-
-		if strings.HasPrefix(arg, "#") {
-			filter.HasTags = true
-			filter.Tags = append(filter.Tags, arg[1:])
-		}
-
 		if strings.HasPrefix(arg, "due:") {
-			filter.HasDue = true
 			date, err := time.Parse(rfc3339FullDate, arg[4:])
 			if err != nil {
 				log.Fatal(err)
 			}
-			filter.Due = date
+			p.Filter.Due = date
+			p.Filter.Found = true
+
+			continue
 		}
 	}
 
-	return cmd, filter, nil
+	if isModifyCommand(p.Command) {
+		for _, arg := range args[cmdAtIndex+1:] {
+			if strings.HasPrefix(arg, "due:") {
+				if arg[4:] == "-" {
+					p.Modification.RemoveDue = true
+
+					continue
+				}
+				date, err := time.Parse(rfc3339FullDate, arg[4:])
+				if err != nil {
+					log.Fatal(err)
+				}
+				p.Modification.Due = date
+
+				continue
+			}
+
+			description = append(description, arg)
+		}
+	}
+
+	if len(description) > 0 {
+		p.Modification.Description = strings.Join(description, " ")
+	}
+
+	return err
+}
+
+func isModifyCommand(cmd string) bool {
+	return sliceutils.StrSliceContains(modifyCommands, cmd)
 }

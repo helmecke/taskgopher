@@ -22,10 +22,10 @@ func NewApp(location string) *App {
 }
 
 // AddTask is creating a task
-func (a *App) AddTask(filter *Filter) error {
+func (a *App) AddTask(mod *Modification) error {
 	a.load(false)
 
-	task := NewTask(filter)
+	task := NewTask(mod)
 
 	fmt.Printf("Created task %d.\n", a.TaskList.add(task))
 	a.save()
@@ -34,14 +34,12 @@ func (a *App) AddTask(filter *Filter) error {
 }
 
 // ModifyTask is modifying a task
-func (a *App) ModifyTask(filter *Filter) error {
+func (a *App) ModifyTask(filter *Filter, mod *Modification) error {
 	a.load(filter.All)
+	a.TaskList.filter(filter)
 
-	taskFilter := &TaskFilter{Tasks: a.TaskList.Tasks, Filter: filter}
-	tasks := taskFilter.ApplyFilter()
-
-	for _, task := range tasks {
-		EditTask(task, filter)
+	for _, task := range a.TaskList.filtered() {
+		task.modify(mod)
 
 		a.TaskList.set(task)
 		fmt.Printf("Modified task %d.\n", task.ID)
@@ -54,11 +52,9 @@ func (a *App) ModifyTask(filter *Filter) error {
 // CompleteTask is completing a task
 func (a *App) CompleteTask(filter *Filter) error {
 	a.load(filter.All)
+	a.TaskList.filter(filter)
 
-	taskFilter := &TaskFilter{Tasks: a.TaskList.Tasks, Filter: filter}
-	tasks := taskFilter.ApplyFilter()
-
-	for _, task := range tasks {
+	for _, task := range a.TaskList.filtered() {
 		task.complete()
 
 		a.TaskList.set(task)
@@ -84,11 +80,9 @@ func (a *App) DeleteTask(filter *Filter) error {
 	}
 
 	a.load(filter.All)
+	a.TaskList.filter(filter)
 
-	taskFilter := &TaskFilter{Tasks: a.TaskList.Tasks, Filter: filter}
-	tasks := taskFilter.ApplyFilter()
-
-	for _, task := range tasks {
+	for _, task := range a.TaskList.filtered() {
 		task.delete()
 
 		a.TaskList.set(task)
@@ -103,9 +97,7 @@ func (a *App) DeleteTask(filter *Filter) error {
 // ShowTask is showing details of a task
 func (a *App) ShowTask(filter *Filter) error {
 	a.load(false)
-
-	task := a.TaskList.get(filter.IDs[0])
-	a.Printer.PrintTask(task)
+	a.Printer.PrintTask(a.TaskList.get(filter.IDs[0]))
 
 	return nil
 }
@@ -115,11 +107,8 @@ func (a *App) ListTasks(filter *Filter) error {
 	a.garbageCollect()
 	a.clear()
 	a.load(filter.All)
-
-	taskFilter := &TaskFilter{Tasks: a.TaskList.Tasks, Filter: filter}
-	tasks := taskFilter.ApplyFilter()
-
-	a.Printer.PrintTaskList(tasks)
+	a.TaskList.filter(filter)
+	a.Printer.PrintTaskList(a.TaskList.filtered())
 
 	return nil
 }
