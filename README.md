@@ -34,9 +34,9 @@ alias t=taskgopher
 
 t add very important task due:2022-07-01
 
-t list
+t due:2022-07-01 list
 
-t complete 1
+t 1 complete
 ```
 
 ## Contributing
