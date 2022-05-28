@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/helmecke/taskgopher/internal/config"
-	tg "github.com/helmecke/taskgopher/internal/taskgopher"
+	"github.com/helmecke/taskgopher/internal/parser"
 	"github.com/spf13/cobra"
 )
 
@@ -17,13 +17,13 @@ var rootCmd = &cobra.Command{
 }
 
 // TODO: replace if cobra 1.5 hits - https://github.com/spf13/cobra/pull/1551
-var filter *tg.Filter
-var mod *tg.Modification
+var filter *parser.Filter
+var mod *parser.Modification
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	parser := tg.NewParser()
+	parser := parser.NewParser()
 	err := parser.ParseArgs(os.Args)
 	if err != nil || parser.Command != "" {
 		// TODO: cleanup args

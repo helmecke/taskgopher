@@ -1,30 +1,33 @@
-package taskgopher
+package storage
 
 import (
 	"log"
 	"os"
 
+	"github.com/helmecke/taskgopher/internal/task"
 	"github.com/olivere/ndjson"
 )
 
 const mode = 0644
 
-// A FileStore loads and saves tasks to file
-type fileStore struct {
+// A FileStorage loads and saves tasks to file
+type FileStorage struct {
 	Location  string
 	Pending   string
 	Completed string
 }
 
-func newFileStore(location string) *fileStore {
-	return &fileStore{
+// NewFileStorage creates a new file store
+func NewFileStorage(location string) *FileStorage {
+	return &FileStorage{
 		Location:  location,
 		Pending:   "pending.data",
 		Completed: "completed.data",
 	}
 }
 
-func (f *fileStore) init() {
+// Create creates data directory and files
+func (f *FileStorage) Create() {
 	if err := os.MkdirAll(f.Location, os.ModePerm); err != nil {
 		log.Fatal(err)
 	}
@@ -39,7 +42,8 @@ func (f *fileStore) init() {
 	}
 }
 
-func (f *fileStore) load(all bool) (tasks []*Task) {
+// Load loads tasks from file
+func (f *FileStorage) Load(all bool) (tasks []*task.Item) {
 	file, err := os.OpenFile(f.pending(), os.O_RDONLY, mode)
 	if err != nil {
 		log.Fatal(err)
@@ -49,7 +53,7 @@ func (f *fileStore) load(all bool) (tasks []*Task) {
 	r := ndjson.NewReader(file)
 
 	for i := 1; r.Next(); i++ {
-		var task *Task
+		var task *task.Item
 		if err := r.Decode(&task); err != nil {
 			log.Panicf("Decode failed: %v", err)
 
@@ -75,7 +79,7 @@ func (f *fileStore) load(all bool) (tasks []*Task) {
 		r := ndjson.NewReader(file)
 
 		for r.Next() {
-			var task *Task
+			var task *task.Item
 			if err := r.Decode(&task); err != nil {
 				log.Panicf("Decode failed: %v", err)
 
@@ -95,7 +99,8 @@ func (f *fileStore) load(all bool) (tasks []*Task) {
 	return tasks
 }
 
-func (f *fileStore) save(tasks []*Task) {
+// Save saves tasks to file
+func (f *FileStorage) Save(tasks []*task.Item) {
 	file, err := os.OpenFile(f.pending(), os.O_CREATE|os.O_WRONLY, mode)
 	if err != nil {
 		log.Fatal(err)
@@ -117,7 +122,9 @@ func (f *fileStore) save(tasks []*Task) {
 	}
 }
 
-func (f *fileStore) complete(task *Task) {
+// Complete completes task
+// TODO: this does not belong here
+func (f *FileStorage) Complete(task *task.Item) {
 	file, err := os.OpenFile(f.completed(), os.O_CREATE|os.O_WRONLY|os.O_APPEND, mode)
 	if err != nil {
 		log.Fatal(err)
@@ -133,10 +140,10 @@ func (f *fileStore) complete(task *Task) {
 	}
 }
 
-func (f *fileStore) pending() string {
+func (f *FileStorage) pending() string {
 	return f.Location + "/" + f.Pending
 }
 
-func (f *fileStore) completed() string {
+func (f *FileStorage) completed() string {
 	return f.Location + "/" + f.Completed
 }
