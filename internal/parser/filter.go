@@ -1,4 +1,4 @@
-package taskgopher
+package parser
 
 import "time"
 
@@ -10,6 +10,7 @@ type Filter struct {
 	All   bool
 }
 
-func (f *Filter) hasDue() bool {
+// HasDue returns if filter has due date set
+func (f *Filter) HasDue() bool {
 	return !f.Due.IsZero()
 }

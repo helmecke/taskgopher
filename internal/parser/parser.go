@@ -1,4 +1,4 @@
-package taskgopher
+package parser
 
 import (
 	"log"

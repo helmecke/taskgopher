@@ -1,10 +1,11 @@
-package taskgopher
+package task
 
 import (
 	"math"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/helmecke/taskgopher/internal/parser"
 	"github.com/helmecke/taskgopher/pkg/sliceutils"
 	"github.com/helmecke/taskgopher/pkg/timeutils"
 )
@@ -15,8 +16,8 @@ const (
 	statusDeleted   = "deleted"
 )
 
-// A Task is an item
-type Task struct {
+// A Item is an item
+type Item struct {
 	ID          int       `json:"-"`
 	UUID        uuid.UUID `json:"uuid"`
 	Description string    `json:"description"`
@@ -35,8 +36,8 @@ type Task struct {
 }
 
 // NewTask is creating a new task
-func NewTask(mod *Modification) *Task {
-	task := &Task{
+func NewTask(mod *parser.Modification) *Item {
+	task := &Item{
 		UUID:        uuid.New(),
 		Description: mod.Description,
 		// Due:         filter.Due,
@@ -49,14 +50,15 @@ func NewTask(mod *Modification) *Task {
 	return task
 }
 
-func (t *Task) modify(mod *Modification) {
+// Modify modifies task with given modification
+func (t *Item) Modify(mod *parser.Modification) {
 	t.Modified = time.Now()
 
-	if mod.hasDescription() {
+	if mod.HasDescription() {
 		t.Description = mod.Description
 	}
 
-	if mod.hasDue() {
+	if mod.HasDue() {
 		t.Due = mod.Due
 	}
 
@@ -65,17 +67,20 @@ func (t *Task) modify(mod *Modification) {
 	}
 }
 
-func (t *Task) complete() {
+// Complete completes task
+func (t *Item) Complete() {
 	now := time.Now()
 	t.Completed = now
 	t.Status = statusCompleted
 }
 
-func (t *Task) delete() {
+// Delete deletes task
+func (t *Item) Delete() {
 	t.Status = statusDeleted
 }
 
-func (t *Task) urgency() {
+// SetUrgency sets urgency of task
+func (t *Item) SetUrgency() {
 	u := map[string]float64{
 		"next":      15,
 		"due":       12,
@@ -111,20 +116,24 @@ func (t *Task) urgency() {
 	t.Urgency = urgency
 }
 
-func (t *Task) age() string {
+// Age returns age of task in shorthand
+func (t *Item) Age() string {
 	return timeutils.Diff(time.Now(), t.Created, false)
 }
 
-func (t *Task) lastModified() string {
+// LastModifiedDiff returns duration since last modification in shorthand
+func (t *Item) LastModifiedDiff() string {
 	return timeutils.Diff(time.Now(), t.Modified, false)
 }
 
-func (t *Task) due() string {
+// DueDiff return duration to due date in shorthand
+func (t *Item) DueDiff() string {
 	return timeutils.Diff(time.Now(), t.Due, true)
 }
 
+// GenerateVirtualTags generates virtual tags of task
 // nolint:gocognit
-func (t *Task) generateVirtualTags() {
+func (t *Item) GenerateVirtualTags() {
 	// DUE - Does the task have a due date?
 	if !t.Due.IsZero() {
 		t.VirtualTags = append(t.VirtualTags, "DUE")
@@ -207,12 +216,13 @@ func (t *Task) generateVirtualTags() {
 	// LATEST - Is the task the most recently added task?
 }
 
-func (t *Task) matches(filter *Filter) bool {
+// Matches return if task matches given filter
+func (t *Item) Matches(filter *parser.Filter) bool {
 	if len(filter.IDs) > 0 && sliceutils.IntSliceContains(filter.IDs, t.ID) {
 		return true
 	}
 
-	if filter.hasDue() && filter.Due.Equal(t.Due) {
+	if filter.HasDue() && filter.Due.Equal(t.Due) {
 		return true
 	}
 

@@ -1,23 +1,24 @@
-package taskgopher
+package printer
 
 import (
 	"fmt"
 	"os"
 	"strings"
 
+	"github.com/helmecke/taskgopher/internal/task"
 	"github.com/jedib0t/go-pretty/v6/table"
 )
 
-// ScreenPrinter is the structure of the screen printer
-type ScreenPrinter struct{}
+// TextPrinter is the structure of the screen printer
+type TextPrinter struct{}
 
-// NewScreenPrinter is creating the screen printer
-func NewScreenPrinter() *ScreenPrinter {
-	return &ScreenPrinter{}
+// NewText is creating the screen printer
+func NewText() *TextPrinter {
+	return &TextPrinter{}
 }
 
-// PrintTask is printing detailed information on a task
-func (s *ScreenPrinter) PrintTask(task *Task) {
+// PrintItem is printing detailed information on a task
+func (p *TextPrinter) PrintItem(task *task.Item) {
 	fmt.Println("")
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
@@ -27,10 +28,10 @@ func (s *ScreenPrinter) PrintTask(task *Task) {
 	t.AppendRow(table.Row{"ID", task.ID})
 	t.AppendRow(table.Row{"UUID", task.UUID})
 	t.AppendRow(table.Row{"Status", task.Status})
-	t.AppendRow(table.Row{"Created", task.Created.Format("2006-01-02 15:04:05") + " (" + task.age() + ")"})
+	t.AppendRow(table.Row{"Created", task.Created.Format("2006-01-02 15:04:05") + " (" + task.Age() + ")"})
 
 	if !task.Modified.IsZero() {
-		t.AppendRow(table.Row{"Modified", task.Modified.Format("2006-01-02 15:04:05") + " (" + task.lastModified() + ")"})
+		t.AppendRow(table.Row{"Modified", task.Modified.Format("2006-01-02 15:04:05") + " (" + task.LastModifiedDiff() + ")"})
 	}
 
 	if !task.Completed.IsZero() {
@@ -38,7 +39,7 @@ func (s *ScreenPrinter) PrintTask(task *Task) {
 	}
 
 	if !task.Due.IsZero() {
-		t.AppendRow(table.Row{"Due", task.Due.Format("2006-01-02 15:04:05") + " (" + task.due() + ")"})
+		t.AppendRow(table.Row{"Due", task.Due.Format("2006-01-02 15:04:05") + " (" + task.DueDiff() + ")"})
 	}
 
 	if len(task.Tags) > 0 {
@@ -63,8 +64,8 @@ func (s *ScreenPrinter) PrintTask(task *Task) {
 	fmt.Println("")
 }
 
-// PrintTaskList is printing general information on all tasks
-func (s *ScreenPrinter) PrintTaskList(tasks []*Task) {
+// PrintList is printing general information on all tasks
+func (p *TextPrinter) PrintList(tasks []*task.Item) {
 	if len(tasks) > 0 {
 		fmt.Println("")
 
@@ -77,7 +78,7 @@ func (s *ScreenPrinter) PrintTaskList(tasks []*Task) {
 		})
 		t.AppendHeader(table.Row{"ID", "Age", "Title", "Urgency"})
 		for _, task := range tasks {
-			t.AppendRow(table.Row{task.ID, task.age(), task.Description, task.Urgency})
+			t.AppendRow(table.Row{task.ID, task.Age(), task.Description, task.Urgency})
 		}
 		t.Render()
 

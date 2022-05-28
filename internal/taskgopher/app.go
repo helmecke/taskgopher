@@ -3,45 +3,49 @@ package taskgopher
 import (
 	"fmt"
 
+	"github.com/helmecke/taskgopher/internal/parser"
+	"github.com/helmecke/taskgopher/internal/printer"
+	"github.com/helmecke/taskgopher/internal/storage"
+	"github.com/helmecke/taskgopher/internal/task"
 	"github.com/manifoldco/promptui"
 )
 
 // App is the structure of the taskgopher app
 type App struct {
-	TaskList TaskList
-	Store    Store
-	Printer  Printer
+	TaskList task.List
+	Store    storage.Storage
+	Printer  printer.Printer
 }
 
 // NewApp is creating the taskgopher app
 func NewApp(location string) *App {
 	return &App{
-		Store:   newFileStore(location),
-		Printer: NewScreenPrinter(),
+		Store:   storage.NewFileStorage(location),
+		Printer: printer.NewText(),
 	}
 }
 
 // AddTask is creating a task
-func (a *App) AddTask(mod *Modification) error {
+func (a *App) AddTask(mod *parser.Modification) error {
 	a.load(false)
 
-	task := NewTask(mod)
+	task := task.NewTask(mod)
 
-	fmt.Printf("Created task %d.\n", a.TaskList.add(task))
+	fmt.Printf("Created task %d.\n", a.TaskList.Add(task))
 	a.save()
 
 	return nil
 }
 
 // ModifyTask is modifying a task
-func (a *App) ModifyTask(filter *Filter, mod *Modification) error {
+func (a *App) ModifyTask(filter *parser.Filter, mod *parser.Modification) error {
 	a.load(filter.All)
-	a.TaskList.filter(filter)
+	a.TaskList.Filter(filter)
 
-	for _, task := range a.TaskList.filtered() {
-		task.modify(mod)
+	for _, task := range a.TaskList.Filtered() {
+		task.Modify(mod)
 
-		a.TaskList.set(task)
+		a.TaskList.Set(task)
 		fmt.Printf("Modified task %d.\n", task.ID)
 	}
 	a.save()
@@ -50,14 +54,14 @@ func (a *App) ModifyTask(filter *Filter, mod *Modification) error {
 }
 
 // CompleteTask is completing a task
-func (a *App) CompleteTask(filter *Filter) error {
+func (a *App) CompleteTask(filter *parser.Filter) error {
 	a.load(filter.All)
-	a.TaskList.filter(filter)
+	a.TaskList.Filter(filter)
 
-	for _, task := range a.TaskList.filtered() {
-		task.complete()
+	for _, task := range a.TaskList.Filtered() {
+		task.Complete()
 
-		a.TaskList.set(task)
+		a.TaskList.Set(task)
 		fmt.Printf("Completed task %d.\n", task.ID)
 	}
 	a.save()
@@ -66,7 +70,7 @@ func (a *App) CompleteTask(filter *Filter) error {
 }
 
 // DeleteTask is deleting a task
-func (a *App) DeleteTask(filter *Filter) error {
+func (a *App) DeleteTask(filter *parser.Filter) error {
 	prompt := promptui.Prompt{
 		Label:     "Delete task",
 		IsConfirm: true,
@@ -80,12 +84,12 @@ func (a *App) DeleteTask(filter *Filter) error {
 	}
 
 	a.load(filter.All)
-	a.TaskList.filter(filter)
+	a.TaskList.Filter(filter)
 
-	for _, task := range a.TaskList.filtered() {
-		task.delete()
+	for _, task := range a.TaskList.Filtered() {
+		task.Delete()
 
-		a.TaskList.set(task)
+		a.TaskList.Set(task)
 		fmt.Printf("Deleted task %d.\n", task.ID)
 	}
 
@@ -95,32 +99,32 @@ func (a *App) DeleteTask(filter *Filter) error {
 }
 
 // ShowTask is showing details of a task
-func (a *App) ShowTask(filter *Filter) error {
+func (a *App) ShowTask(filter *parser.Filter) error {
 	a.load(false)
-	a.Printer.PrintTask(a.TaskList.get(filter.IDs[0]))
+	a.Printer.PrintItem(a.TaskList.Get(filter.IDs[0]))
 
 	return nil
 }
 
 // ListTasks is listing tasks
-func (a *App) ListTasks(filter *Filter) error {
+func (a *App) ListTasks(filter *parser.Filter) error {
 	a.garbageCollect()
 	a.clear()
 	a.load(filter.All)
-	a.TaskList.filter(filter)
-	a.Printer.PrintTaskList(a.TaskList.filtered())
+	a.TaskList.Filter(filter)
+	a.Printer.PrintList(a.TaskList.Filtered())
 
 	return nil
 }
 
 func (a *App) load(all bool) {
-	tasks := a.Store.load(all)
+	tasks := a.Store.Load(all)
 
-	a.TaskList.load(tasks)
+	a.TaskList.Load(tasks)
 }
 
 func (a *App) save() {
-	a.Store.save(a.TaskList.Tasks)
+	a.Store.Save(a.TaskList.Tasks)
 }
 
 func (a *App) clear() {
@@ -129,9 +133,9 @@ func (a *App) clear() {
 
 func (a *App) garbageCollect() {
 	a.load(false)
-	completed := a.TaskList.garbageCollect()
+	completed := a.TaskList.GarbageCollect()
 	for _, task := range completed {
-		a.Store.complete(task)
+		a.Store.Complete(task)
 	}
 	a.save()
 }
