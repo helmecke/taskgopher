@@ -1,6 +1,9 @@
 package task
 
-import "github.com/helmecke/taskgopher/internal/parser"
+import (
+	"github.com/google/uuid"
+	"github.com/helmecke/taskgopher/internal/parser"
+)
 
 // List hold n task
 type List struct {
@@ -29,10 +32,21 @@ func (l *List) Add(task *Item) int {
 	return task.ID
 }
 
-// Get gets task with id
-func (l *List) Get(id int) *Item {
+// GetByID gets task with id
+func (l *List) GetByID(id int) *Item {
 	for _, task := range l.Tasks {
 		if id == task.ID {
+			return task
+		}
+	}
+
+	return nil
+}
+
+// GetByUUID gets task with uuid
+func (l *List) GetByUUID(uuid uuid.UUID) *Item {
+	for _, task := range l.Tasks {
+		if uuid == task.UUID {
 			return task
 		}
 	}

@@ -101,7 +101,12 @@ func (a *App) DeleteTask(filter *parser.Filter) error {
 // ShowTask is showing details of a task
 func (a *App) ShowTask(filter *parser.Filter) error {
 	a.load(false)
-	a.Printer.PrintItem(a.TaskList.Get(filter.IDs[0]))
+	if len(filter.IDs) > 0 {
+		a.Printer.PrintItem(a.TaskList.GetByID(filter.IDs[0]))
+	}
+	if len(filter.UUIDs) > 0 {
+		a.Printer.PrintItem(a.TaskList.GetByUUID(filter.UUIDs[0]))
+	}
 
 	return nil
 }
