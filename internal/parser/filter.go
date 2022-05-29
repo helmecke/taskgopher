@@ -1,11 +1,16 @@
 package parser
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 // Filter holds filter results
 type Filter struct {
 	Found bool
 	IDs   []int
+	UUIDs []uuid.UUID
 	Due   time.Time
 	All   bool
 }

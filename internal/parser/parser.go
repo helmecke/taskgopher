@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/helmecke/taskgopher/pkg/sliceutils"
 )
 
@@ -28,6 +29,7 @@ func NewParser() *Parser {
 }
 
 // ParseArgs parses args
+// nolint:gocognit
 func (p *Parser) ParseArgs(args []string) (err error) {
 	cmdAtIndex := -1
 	var description []string
@@ -40,6 +42,13 @@ func (p *Parser) ParseArgs(args []string) (err error) {
 			// break here to only parse args before filterCommands, to enforce
 			// taskgopher <filter> list
 			break
+		}
+
+		if u, err := uuid.Parse(arg); err == nil {
+			p.Filter.UUIDs = append(p.Filter.UUIDs, u)
+			p.Filter.Found = true
+
+			continue
 		}
 
 		if s, err := strconv.ParseInt(arg, 10, 64); err == nil {

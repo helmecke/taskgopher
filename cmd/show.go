@@ -16,7 +16,7 @@ var showCmd = &cobra.Command{
 	Use:   "show",
 	Short: "Show details of a task",
 	Args: func(cmd *cobra.Command, args []string) error {
-		if len(filter.IDs) != 1 {
+		if len(filter.IDs)+len(filter.UUIDs) != 1 {
 			return errShowIDs
 		}
 

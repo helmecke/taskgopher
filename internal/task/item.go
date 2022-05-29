@@ -51,36 +51,36 @@ func NewTask(mod *parser.Modification) *Item {
 }
 
 // Modify modifies task with given modification
-func (t *Item) Modify(mod *parser.Modification) {
-	t.Modified = time.Now()
+func (i *Item) Modify(mod *parser.Modification) {
+	i.Modified = time.Now()
 
 	if mod.HasDescription() {
-		t.Description = mod.Description
+		i.Description = mod.Description
 	}
 
 	if mod.HasDue() {
-		t.Due = mod.Due
+		i.Due = mod.Due
 	}
 
 	if mod.RemoveDue {
-		t.Due = time.Time{}
+		i.Due = time.Time{}
 	}
 }
 
 // Complete completes task
-func (t *Item) Complete() {
+func (i *Item) Complete() {
 	now := time.Now()
-	t.Completed = now
-	t.Status = statusCompleted
+	i.Completed = now
+	i.Status = statusCompleted
 }
 
 // Delete deletes task
-func (t *Item) Delete() {
-	t.Status = statusDeleted
+func (i *Item) Delete() {
+	i.Status = statusDeleted
 }
 
 // SetUrgency sets urgency of task
-func (t *Item) SetUrgency() {
+func (i *Item) SetUrgency() {
 	u := map[string]float64{
 		"next":      15,
 		"due":       12,
@@ -99,82 +99,82 @@ func (t *Item) SetUrgency() {
 
 	urgency := 0.0
 
-	if !t.Due.IsZero() {
+	if !i.Due.IsZero() {
 		urgency += u["due"]
 	}
 
-	urgency += math.Floor(u["age"] * (time.Since(t.Created).Hours() / 24 / 39))
+	urgency += math.Floor(u["age"] * (time.Since(i.Created).Hours() / 24 / 39))
 
-	if len(t.Tags) > 0 {
+	if len(i.Tags) > 0 {
 		urgency += u["tags"]
 	}
 
-	if t.Project != "" {
+	if i.Project != "" {
 		urgency += u["project"]
 	}
 
-	t.Urgency = urgency
+	i.Urgency = urgency
 }
 
 // Age returns age of task in shorthand
-func (t *Item) Age() string {
-	return timeutils.Diff(time.Now(), t.Created, false)
+func (i *Item) Age() string {
+	return timeutils.Diff(time.Now(), i.Created, false)
 }
 
 // LastModifiedDiff returns duration since last modification in shorthand
-func (t *Item) LastModifiedDiff() string {
-	return timeutils.Diff(time.Now(), t.Modified, false)
+func (i *Item) LastModifiedDiff() string {
+	return timeutils.Diff(time.Now(), i.Modified, false)
 }
 
 // DueDiff return duration to due date in shorthand
-func (t *Item) DueDiff() string {
-	return timeutils.Diff(time.Now(), t.Due, true)
+func (i *Item) DueDiff() string {
+	return timeutils.Diff(time.Now(), i.Due, true)
 }
 
 // GenerateVirtualTags generates virtual tags of task
 // nolint:gocognit
-func (t *Item) GenerateVirtualTags() {
+func (i *Item) GenerateVirtualTags() {
 	// DUE - Does the task have a due date?
-	if !t.Due.IsZero() {
-		t.VirtualTags = append(t.VirtualTags, "DUE")
+	if !i.Due.IsZero() {
+		i.VirtualTags = append(i.VirtualTags, "DUE")
 
 		// OVERDUE - Is this task past its due date?
-		if t.Due.Before(time.Now()) {
-			t.VirtualTags = append(t.VirtualTags, "OVERDUE")
+		if i.Due.Before(time.Now()) {
+			i.VirtualTags = append(i.VirtualTags, "OVERDUE")
 		}
 
 		// YEAR	Is this task due this year?
-		if t.Due.Year() == time.Now().Year() {
-			t.VirtualTags = append(t.VirtualTags, "YEAR")
+		if i.Due.Year() == time.Now().Year() {
+			i.VirtualTags = append(i.VirtualTags, "YEAR")
 
 			// QUARTER	Is this task due this quarter?
 			q := [12]int{1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4}
-			if q[t.Due.Month()] == q[time.Now().Month()] {
-				t.VirtualTags = append(t.VirtualTags, "QUARTER")
+			if q[i.Due.Month()] == q[time.Now().Month()] {
+				i.VirtualTags = append(i.VirtualTags, "QUARTER")
 
 				// MONTH - Is this task due this month?
-				if t.Due.Month() == time.Now().Month() {
-					t.VirtualTags = append(t.VirtualTags, "MONTH")
+				if i.Due.Month() == time.Now().Month() {
+					i.VirtualTags = append(i.VirtualTags, "MONTH")
 
 					// WEEK - Is this task due this week?
-					_, dt := t.Due.ISOWeek()
+					_, dt := i.Due.ISOWeek()
 					_, ct := time.Now().ISOWeek()
 					if dt == ct {
-						t.VirtualTags = append(t.VirtualTags, "WEEK")
+						i.VirtualTags = append(i.VirtualTags, "WEEK")
 
 						// TODAY - Is this task due sometime today?
-						if t.Due.Equal(time.Now().Truncate(time.Hour * 24)) {
-							t.VirtualTags = append(t.VirtualTags, "TODAY")
+						if i.Due.Equal(time.Now().Truncate(time.Hour * 24)) {
+							i.VirtualTags = append(i.VirtualTags, "TODAY")
 						}
 
 						// YESTERDAY - Was the task due yesterday?
-						if t.Due.Equal(time.Now().Truncate(time.Hour * 24).Add(-24 * time.Hour)) {
-							t.VirtualTags = append(t.VirtualTags, "YESTERDAY")
+						if i.Due.Equal(time.Now().Truncate(time.Hour * 24).Add(-24 * time.Hour)) {
+							i.VirtualTags = append(i.VirtualTags, "YESTERDAY")
 						}
 
 						// TOMORROW - Is the task due tomorrow?
-						if t.Due.Equal(time.Now().Truncate(time.Hour * 24).Add(24 * time.Hour)) {
-							t.VirtualTags = append(t.VirtualTags, "TOMORROW")
+						if i.Due.Equal(time.Now().Truncate(time.Hour * 24).Add(24 * time.Hour)) {
+							i.VirtualTags = append(i.VirtualTags, "TOMORROW")
 						}
 					}
 				}
@@ -183,18 +183,18 @@ func (t *Item) GenerateVirtualTags() {
 	}
 
 	// PENDING - Is the task in the pending state?
-	if t.Status == statusPending {
-		t.VirtualTags = append(t.VirtualTags, "PENDING")
+	if i.IsPending() {
+		i.VirtualTags = append(i.VirtualTags, "PENDING")
 	}
 
 	// TAGGED - Does the task have any tags?
-	if len(t.Tags) > 0 {
-		t.VirtualTags = append(t.VirtualTags, "TAGGED")
+	if i.HasTag() {
+		i.VirtualTags = append(i.VirtualTags, "TAGGED")
 	}
 
 	// PROJECT - Does the task have a project?
-	if t.Project != "" {
-		t.VirtualTags = append(t.VirtualTags, "PROJECT")
+	if i.HasProject() {
+		i.VirtualTags = append(i.VirtualTags, "PROJECT")
 	}
 
 	// BLOCKED - Is the task dependent on another incomplete task?
@@ -217,14 +217,38 @@ func (t *Item) GenerateVirtualTags() {
 }
 
 // Matches return if task matches given filter
-func (t *Item) Matches(filter *parser.Filter) bool {
-	if len(filter.IDs) > 0 && sliceutils.IntSliceContains(filter.IDs, t.ID) {
+func (i *Item) Matches(filter *parser.Filter) bool {
+	if len(filter.IDs) > 0 && sliceutils.IntSliceContains(filter.IDs, i.ID) {
 		return true
 	}
 
-	if filter.HasDue() && filter.Due.Equal(t.Due) {
+	if len(filter.UUIDs) > 0 && sliceutils.UUIDSliceContains(filter.UUIDs, i.UUID) {
+		return true
+	}
+
+	if filter.HasDue() && filter.Due.Equal(i.Due) {
 		return true
 	}
 
 	return false
+}
+
+// IsPending is a helper if a task is pending
+func (i *Item) IsPending() bool {
+	return i.Status == statusPending
+}
+
+// HasTag is a helper if a task has a tag
+func (i *Item) HasTag() bool {
+	return len(i.Tags) > 0
+}
+
+// HasProject is a helper if a task has a project
+func (i *Item) HasProject() bool {
+	return i.Project != ""
+}
+
+// HasContext is a helper if a task has a context
+func (i *Item) HasContext() bool {
+	return len(i.Contexts) > 0
 }
