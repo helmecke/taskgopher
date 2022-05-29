@@ -11,22 +11,6 @@ import (
 
 const rfc3339FullDate = "2006-01-02"
 
-var filterCommands = []string{
-	"complete",
-	"delete",
-	"list",
-	"modify",
-	"mod",
-	"show",
-}
-
-var modifyCommands = []string{
-	"add",
-	"complete",
-	"modify",
-	"mod",
-}
-
 // A Parser parses user input
 type Parser struct {
 	Command      string
@@ -49,7 +33,7 @@ func (p *Parser) ParseArgs(args []string) (err error) {
 	var description []string
 
 	for i, arg := range args {
-		if p.Command == "" && sliceutils.StrSliceContains(filterCommands, arg) {
+		if p.Command == "" && isFilterCommand(arg) {
 			p.Command = arg
 			cmdAtIndex = i
 
@@ -111,6 +95,26 @@ func (p *Parser) ParseArgs(args []string) (err error) {
 	return err
 }
 
+func isFilterCommand(cmd string) bool {
+	var filterCommands = []string{
+		"complete",
+		"delete",
+		"list",
+		"modify",
+		"mod",
+		"show",
+	}
+
+	return sliceutils.StrSliceContains(filterCommands, cmd)
+}
+
 func isModifyCommand(cmd string) bool {
+	modifyCommands := []string{
+		"add",
+		"complete",
+		"modify",
+		"mod",
+	}
+
 	return sliceutils.StrSliceContains(modifyCommands, cmd)
 }
