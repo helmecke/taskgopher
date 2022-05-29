@@ -60,33 +60,6 @@ func TestItem_HasProject(t *testing.T) {
 	}
 }
 
-func TestItem_HasContext(t *testing.T) {
-	t.Parallel()
-	type fields struct {
-		Contexts []string
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		want   bool
-	}{
-		{"true", fields{Contexts: []string{"test"}}, true},
-		{"false", fields{Contexts: []string{}}, false},
-	}
-	for _, tt := range tests {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			i := &task.Item{
-				Contexts: tt.fields.Contexts,
-			}
-			if got := i.HasContext(); got != tt.want {
-				t.Errorf("Item.HasContext() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestItem_IsPending(t *testing.T) {
 	t.Parallel()
 	type fields struct {

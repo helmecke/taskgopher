@@ -50,10 +50,6 @@ func (p *TextPrinter) PrintItem(task *task.Item) {
 		t.AppendRow(table.Row{"Project", task.Project})
 	}
 
-	if len(task.Contexts) > 0 {
-		t.AppendRow(table.Row{"Contexts", task.Contexts})
-	}
-
 	t.AppendRow(table.Row{"Urgency", task.Urgency})
 
 	if len(task.Tags) > 0 {
