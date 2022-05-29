@@ -74,6 +74,13 @@ func (p *Parser) ParseArgs(args []string) (err error) {
 
 			continue
 		}
+
+		if strings.HasPrefix(arg, "project:") {
+			p.Filter.Project = arg[8:]
+			p.Filter.Found = true
+
+			continue
+		}
 	}
 
 	if isModifyCommand(p.Command) {
@@ -84,11 +91,24 @@ func (p *Parser) ParseArgs(args []string) (err error) {
 
 					continue
 				}
+
 				date, err := time.Parse(rfc3339FullDate, arg[4:])
 				if err != nil {
 					log.Fatal(err)
 				}
 				p.Modification.Due = date
+
+				continue
+			}
+
+			if strings.HasPrefix(arg, "project:") {
+				if arg[8:] == "-" {
+					p.Modification.RemoveProject = true
+
+					continue
+				}
+
+				p.Modification.Project = arg[8:]
 
 				continue
 			}
