@@ -8,11 +8,12 @@ import (
 
 // Filter holds filter results
 type Filter struct {
-	Found bool
-	IDs   []int
-	UUIDs []uuid.UUID
-	Due   time.Time
-	All   bool
+	Found   bool
+	IDs     []int
+	UUIDs   []uuid.UUID
+	Due     time.Time
+	Project string
+	All     bool
 }
 
 // HasDue returns if filter has due date set

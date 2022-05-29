@@ -4,17 +4,24 @@ import "time"
 
 // Modification holds modification results
 type Modification struct {
-	Description string
-	Due         time.Time
-	RemoveDue   bool
+	Description   string
+	Due           time.Time
+	RemoveDue     bool
+	Project       string
+	RemoveProject bool
 }
 
-// HasDescription returns if modification has description set
+// HasDescription is a helper if modification has description
 func (m *Modification) HasDescription() bool {
 	return m.Description != ""
 }
 
-// HasDue returns if modification has due date set
+// HasDue is a helper if modification has due date
 func (m *Modification) HasDue() bool {
 	return !m.Due.IsZero()
+}
+
+// HasProject is a helper if modification has project
+func (m *Modification) HasProject() bool {
+	return m.Project != ""
 }

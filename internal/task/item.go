@@ -63,6 +63,14 @@ func (i *Item) Modify(mod *parser.Modification) {
 	if mod.RemoveDue {
 		i.Due = time.Time{}
 	}
+
+	if mod.HasProject() {
+		i.Project = mod.Project
+	}
+
+	if mod.RemoveProject {
+		i.Project = ""
+	}
 }
 
 // Complete completes task
@@ -225,6 +233,10 @@ func (i *Item) Matches(filter *parser.Filter) bool {
 	}
 
 	if filter.HasDue() && filter.Due.Equal(i.Due) {
+		return true
+	}
+
+	if filter.Project == i.Project {
 		return true
 	}
 
