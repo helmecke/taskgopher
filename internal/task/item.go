@@ -28,7 +28,6 @@ type Item struct {
 	Due         time.Time `json:"due,omitempty"`
 	Tags        []string  `json:"tags,omitempty"`
 	Project     string    `json:"project,omitempty"`
-	Contexts    []string  `json:"contexts,omitempty"`
 	Urgency     float64   `json:"-"`
 	VirtualTags []string  `json:"-"`
 	Notes       []string  `json:"notes,omitempty"`
@@ -42,7 +41,6 @@ func NewTask(mod *parser.Modification) *Item {
 		Description: mod.Description,
 		// Due:         filter.Due,
 		// Tags:        filter.Tags,
-		// Contexts:    filter.Contexts,
 		Status:  statusPending,
 		Created: time.Now(),
 	}
@@ -246,9 +244,4 @@ func (i *Item) HasTag() bool {
 // HasProject is a helper if a task has a project
 func (i *Item) HasProject() bool {
 	return i.Project != ""
-}
-
-// HasContext is a helper if a task has a context
-func (i *Item) HasContext() bool {
-	return len(i.Contexts) > 0
 }
