@@ -27,6 +27,7 @@ func (p *TextPrinter) PrintItem(task *task.Item) {
 	t.AppendHeader(table.Row{"Name", "Value"})
 	t.AppendRow(table.Row{"ID", task.ID})
 	t.AppendRow(table.Row{"UUID", task.UUID})
+	t.AppendRow(table.Row{"Description", task.Description})
 	t.AppendRow(table.Row{"Status", task.Status})
 	t.AppendRow(table.Row{"Created", task.Created.Format("2006-01-02 15:04:05") + " (" + task.Age() + ")"})
 
