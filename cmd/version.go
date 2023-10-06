@@ -3,8 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/helmecke/taskgopher/internal/version"
 	"github.com/spf13/cobra"
+
+	"github.com/helmecke/taskgopher/internal/version"
 )
 
 // versionCmd represents the version command

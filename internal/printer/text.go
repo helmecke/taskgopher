@@ -5,8 +5,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/helmecke/taskgopher/internal/task"
 	"github.com/jedib0t/go-pretty/v6/table"
+
+	"github.com/helmecke/taskgopher/internal/task"
 )
 
 // TextPrinter is the structure of the screen printer

@@ -3,11 +3,12 @@ package taskgopher
 import (
 	"fmt"
 
+	"github.com/manifoldco/promptui"
+
 	"github.com/helmecke/taskgopher/internal/parser"
 	"github.com/helmecke/taskgopher/internal/printer"
 	"github.com/helmecke/taskgopher/internal/storage"
 	"github.com/helmecke/taskgopher/internal/task"
-	"github.com/manifoldco/promptui"
 )
 
 // App is the structure of the taskgopher app

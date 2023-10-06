@@ -3,9 +3,10 @@ package cmd
 import (
 	"os"
 
+	"github.com/spf13/cobra"
+
 	"github.com/helmecke/taskgopher/internal/config"
 	"github.com/helmecke/taskgopher/internal/parser"
-	"github.com/spf13/cobra"
 )
 
 var cfgFile string
@@ -17,8 +18,10 @@ var rootCmd = &cobra.Command{
 }
 
 // TODO: replace if cobra 1.5 hits - https://github.com/spf13/cobra/pull/1551
-var filter *parser.Filter
-var mod *parser.Modification
+var (
+	filter *parser.Filter
+	mod    *parser.Modification
+)
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.

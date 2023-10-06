@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+
 	"github.com/helmecke/taskgopher/pkg/sliceutils"
 )
 
@@ -125,7 +126,7 @@ func (p *Parser) ParseArgs(args []string) (err error) {
 }
 
 func isFilterCommand(cmd string) bool {
-	var filterCommands = []string{
+	filterCommands := []string{
 		"complete",
 		"delete",
 		"list",

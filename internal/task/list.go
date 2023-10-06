@@ -2,6 +2,7 @@ package task
 
 import (
 	"github.com/google/uuid"
+
 	"github.com/helmecke/taskgopher/internal/parser"
 )
 
