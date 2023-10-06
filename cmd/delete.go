@@ -3,9 +3,10 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/spf13/cobra"
+
 	"github.com/helmecke/taskgopher/internal/config"
 	tg "github.com/helmecke/taskgopher/internal/taskgopher"
-	"github.com/spf13/cobra"
 )
 
 // deleteCmd represents the delete command

@@ -4,8 +4,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/helmecke/taskgopher/internal/task"
 	"github.com/olivere/ndjson"
+
+	"github.com/helmecke/taskgopher/internal/task"
 )
 
 const mode = 0644

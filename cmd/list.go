@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/helmecke/taskgopher/internal/config"
-	tg "github.com/helmecke/taskgopher/internal/taskgopher"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/helmecke/taskgopher/internal/config"
+	tg "github.com/helmecke/taskgopher/internal/taskgopher"
 )
 
 // listCmd represents the list command
