@@ -127,6 +127,7 @@ func (p *Parser) ParseArgs(args []string) (err error) {
 
 func isFilterCommand(cmd string) bool {
 	filterCommands := []string{
+		"add",
 		"complete",
 		"delete",
 		"list",
