@@ -15,6 +15,7 @@ func Test_isFilterCommand(t *testing.T) {
 		want bool
 	}{
 		{"false", args{cmd: "bla"}, false},
+		{"add", args{cmd: "add"}, true},
 		{"complete", args{cmd: "complete"}, true},
 		{"delete", args{cmd: "delete"}, true},
 		{"list", args{cmd: "list"}, true},
