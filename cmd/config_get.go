@@ -12,7 +12,7 @@ var configGetCmd = &cobra.Command{
 	Use:   "get",
 	Args:  cobra.ExactArgs(1),
 	Short: "Get a config value",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		fmt.Println(viper.Get(args[0]))
 	},
 }

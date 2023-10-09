@@ -13,7 +13,7 @@ var configSetCmd = &cobra.Command{
 	Use:   "set",
 	Args:  cobra.ExactArgs(2),
 	Short: "Set a config value",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		viper.Set(args[0], args[1])
 		if err := viper.SafeWriteConfig(); err != nil {
 			log.Fatal(err)
