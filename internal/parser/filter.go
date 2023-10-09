@@ -20,3 +20,7 @@ type Filter struct {
 func (f *Filter) HasDue() bool {
 	return !f.Due.IsZero()
 }
+
+func (f *Filter) HasProject() bool {
+	return len(f.Project) > 0
+}

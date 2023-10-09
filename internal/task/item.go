@@ -237,7 +237,7 @@ func (i *Item) Matches(filter *parser.Filter) bool {
 		return true
 	}
 
-	if filter.Project == i.Project {
+	if filter.HasProject() && filter.Project == i.Project {
 		return true
 	}
 
