@@ -3,8 +3,34 @@ package task_test
 import (
 	"testing"
 
+	"github.com/helmecke/taskgopher/internal/parser"
 	"github.com/helmecke/taskgopher/internal/task"
 )
+
+func TestItem_Matches(t *testing.T) {
+	t.Parallel()
+	type fields struct {
+		Filter *parser.Filter
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   bool
+	}{
+		{"true", fields{Filter: &parser.Filter{IDs: []int{0}}}, true},
+		{"false", fields{Filter: &parser.Filter{IDs: []int{3}}}, false},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			i := &task.Item{}
+			if got := i.Matches(tt.fields.Filter); got != tt.want {
+				t.Errorf("Item.Matches() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
 
 func TestItem_HasTag(t *testing.T) {
 	t.Parallel()
