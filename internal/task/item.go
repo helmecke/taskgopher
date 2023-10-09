@@ -130,12 +130,18 @@ func (i *Item) Age() string {
 
 // LastModifiedDiff returns duration since last modification in shorthand
 func (i *Item) LastModifiedDiff() string {
+	if i.Modified.IsZero() {
+		return ""
+	}
 	return timeutils.Diff(time.Now(), i.Modified, false)
 }
 
 // DueDiff return duration to due date in shorthand
 func (i *Item) DueDiff() string {
-	return timeutils.Diff(time.Now(), i.Due, true)
+	if i.Due.IsZero() {
+		return ""
+	}
+	return timeutils.Diff(time.Now(), i.Due, false)
 }
 
 // GenerateVirtualTags generates virtual tags of task
