@@ -15,7 +15,7 @@ import (
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List tasks",
-	PreRun: func(cmd *cobra.Command, args []string) {
+	PreRun: func(cmd *cobra.Command, _ []string) {
 		if err := viper.BindPFlag("all", cmd.Flags().Lookup("all")); err != nil {
 			log.Fatal(err)
 		}

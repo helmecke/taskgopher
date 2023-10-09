@@ -16,7 +16,7 @@ var errShowIDs = errors.New("requires a filter that returns one task")
 var showCmd = &cobra.Command{
 	Use:   "show",
 	Short: "Show details of a task",
-	Args: func(cmd *cobra.Command, args []string) error {
+	Args: func(_ *cobra.Command, _ []string) error {
 		if len(filter.IDs)+len(filter.UUIDs) != 1 {
 			return errShowIDs
 		}
