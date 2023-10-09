@@ -27,10 +27,10 @@ var (
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	parser := parser.NewParser()
-	err := parser.ParseArgs(os.Args)
+	err := parser.ParseArgs(os.Args[1:])
 	if err != nil || parser.Command != "" {
 		// TODO: cleanup args
-		rootCmd.SetArgs(append([]string{parser.Command}, os.Args...))
+		rootCmd.SetArgs([]string{parser.Command})
 	}
 
 	filter = parser.Filter
