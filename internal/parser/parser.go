@@ -15,9 +15,9 @@ const rfc3339FullDate = "2006-01-02"
 
 // A Parser parses user input
 type Parser struct {
-	Command      string
 	Filter       *Filter
 	Modification *Modification
+	Command      string
 }
 
 // NewParser creates a new argument parser ready to parse inputs

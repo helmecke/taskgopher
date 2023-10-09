@@ -19,19 +19,19 @@ const (
 
 // A Item is an item
 type Item struct {
-	ID          int       `json:"-"`
-	UUID        uuid.UUID `json:"uuid"`
-	Description string    `json:"description"`
-	Status      string    `json:"status"`
 	Created     time.Time `json:"created"`
 	Modified    time.Time `json:"modified,omitempty"`
 	Completed   time.Time `json:"completed,omitempty"`
 	Due         time.Time `json:"due,omitempty"`
-	Tags        []string  `json:"tags,omitempty"`
+	Description string    `json:"description"`
+	Status      string    `json:"status"`
 	Project     string    `json:"project,omitempty"`
-	Urgency     float64   `json:"-"`
+	Tags        []string  `json:"tags,omitempty"`
 	VirtualTags []string  `json:"-"`
 	Notes       []string  `json:"notes,omitempty"`
+	UUID        uuid.UUID `json:"uuid"`
+	Urgency     float64   `json:"-"`
+	ID          int       `json:"-"`
 	filtered    bool      `json:"-"`
 }
 
