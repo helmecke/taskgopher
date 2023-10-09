@@ -74,9 +74,9 @@ func (p *TextPrinter) PrintList(tasks []*task.Item) {
 		t.SortBy([]table.SortBy{
 			{Name: "Urgency", Mode: table.DscNumeric},
 		})
-		t.AppendHeader(table.Row{"ID", "Age", "Title", "Urgency"})
+		t.AppendHeader(table.Row{"ID", "Age", "Due", "Title", "Project", "Urgency"})
 		for _, task := range tasks {
-			t.AppendRow(table.Row{task.ID, task.Age(), task.Description, task.Urgency})
+			t.AppendRow(table.Row{task.ID, task.Age(), task.DueDiff(), task.Description, task.Project, task.Urgency})
 		}
 		t.Render()
 
