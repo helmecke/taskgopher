@@ -55,6 +55,10 @@ func (p *TextPrinter) PrintItem(task *task.Item) {
 	t.AppendRow(table.Row{"Urgency", task.Urgency})
 
 	if len(task.Tags) > 0 {
+		t.AppendRow(table.Row{"Tags", strings.Join(task.Tags, " ")})
+	}
+
+	if len(task.VirtualTags) > 0 {
 		t.AppendRow(table.Row{"VirtualTags", strings.Join(task.VirtualTags, " ")})
 	}
 
