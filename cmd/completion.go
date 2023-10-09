@@ -44,7 +44,7 @@ $ yourprogram completion fish > ~/.config/fish/completions/yourprogram.fish
 `,
 	DisableFlagsInUseLine: true,
 	ValidArgs:             []string{"bash", "zsh", "fish", "powershell"},
-	Args:                  cobra.ExactValidArgs(1),
+	Args:                  cobra.ExactArgs(1),
 	RunE:                  completionRunE,
 }
 
