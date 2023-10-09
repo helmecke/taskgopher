@@ -2,12 +2,12 @@ package task
 
 import (
 	"math"
+	"slices"
 	"time"
 
 	"github.com/google/uuid"
 
 	"github.com/helmecke/taskgopher/internal/parser"
-	"github.com/helmecke/taskgopher/pkg/sliceutils"
 	"github.com/helmecke/taskgopher/pkg/timeutils"
 )
 
@@ -225,11 +225,11 @@ func (i *Item) GenerateVirtualTags() {
 
 // Matches return if task matches given filter
 func (i *Item) Matches(filter *parser.Filter) bool {
-	if len(filter.IDs) > 0 && sliceutils.IntSliceContains(filter.IDs, i.ID) {
+	if len(filter.IDs) > 0 && slices.Contains(filter.IDs, i.ID) {
 		return true
 	}
 
-	if len(filter.UUIDs) > 0 && sliceutils.UUIDSliceContains(filter.UUIDs, i.UUID) {
+	if len(filter.UUIDs) > 0 && slices.Contains(filter.UUIDs, i.UUID) {
 		return true
 	}
 

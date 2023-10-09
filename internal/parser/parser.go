@@ -5,10 +5,9 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"slices"
 
 	"github.com/google/uuid"
-
-	"github.com/helmecke/taskgopher/pkg/sliceutils"
 )
 
 const rfc3339FullDate = "2006-01-02"
@@ -136,7 +135,7 @@ func isFilterCommand(cmd string) bool {
 		"show",
 	}
 
-	return sliceutils.StrSliceContains(filterCommands, cmd)
+	return slices.Contains(filterCommands, cmd)
 }
 
 func isModifyCommand(cmd string) bool {
@@ -147,5 +146,5 @@ func isModifyCommand(cmd string) bool {
 		"mod",
 	}
 
-	return sliceutils.StrSliceContains(modifyCommands, cmd)
+	return slices.Contains(modifyCommands, cmd)
 }
