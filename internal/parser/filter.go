@@ -8,11 +8,11 @@ import (
 
 // Filter holds filter results
 type Filter struct {
-	Found   bool
 	IDs     []int
-	UUIDs   []uuid.UUID
 	Due     time.Time
 	Project string
+	UUIDs   []uuid.UUID
+	Found   bool
 	All     bool
 }
 

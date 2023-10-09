@@ -13,9 +13,9 @@ import (
 
 // App is the structure of the taskgopher app
 type App struct {
-	TaskList task.List
 	Store    storage.Storage
 	Printer  printer.Printer
+	TaskList task.List
 }
 
 // NewApp is creating the taskgopher app

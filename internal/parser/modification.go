@@ -6,8 +6,8 @@ import "time"
 type Modification struct {
 	Description   string
 	Due           time.Time
-	RemoveDue     bool
 	Project       string
+	RemoveDue     bool
 	RemoveProject bool
 }
 
