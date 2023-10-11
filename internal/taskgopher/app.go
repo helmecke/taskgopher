@@ -44,7 +44,7 @@ func (a *App) ModifyTask(filter *parser.Filter, mod *parser.Modification) error 
 	a.TaskList.Filter(filter)
 
 	for _, task := range a.TaskList.Filtered() {
-		task.Modify(mod)
+		task.Modify(mod, true)
 
 		a.TaskList.Set(task)
 		fmt.Printf("Modified task %d.\n", task.ID)

@@ -38,20 +38,21 @@ type Item struct {
 // NewTask is creating a new task
 func NewTask(mod *parser.Modification) *Item {
 	task := &Item{
-		UUID:        uuid.New(),
-		Description: mod.Description,
-		// Due:         filter.Due,
-		// Tags:        filter.Tags,
+		UUID:    uuid.New(),
 		Status:  statusPending,
 		Created: time.Now(),
 	}
+
+	task.Modify(mod, false)
 
 	return task
 }
 
 // Modify modifies task with given modification
-func (i *Item) Modify(mod *parser.Modification) {
-	i.Modified = time.Now()
+func (i *Item) Modify(mod *parser.Modification, modified bool) {
+	if modified {
+		i.Modified = time.Now()
+	}
 
 	if mod.HasDescription() {
 		i.Description = mod.Description
