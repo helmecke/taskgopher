@@ -108,7 +108,23 @@ func (i *Item) SetUrgency() {
 	urgency := 0.0
 
 	if !i.Due.IsZero() {
-		urgency += u["due"]
+		until := time.Until(i.Due).Abs().Hours()
+		factor := 0.0
+
+		switch {
+		case until > 336:
+			factor = 0.2
+		case until > 168:
+			factor = 0.4
+		case until > 24:
+			factor = 0.8
+		case until > 0:
+			factor = 1.0
+		case until < 0:
+			factor = 2.0
+		}
+
+		urgency += math.Ceil(u["due"] * factor)
 	}
 
 	urgency += math.Floor(u["age"] * (time.Since(i.Created).Hours() / 24 / 39))
