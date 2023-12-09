@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -49,7 +50,11 @@ func (f *FileStorage) Load(all bool) (tasks []*task.Item) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			fmt.Println("Error when closing:", err)
+		}
+	}()
 
 	r := ndjson.NewReader(file)
 
@@ -75,7 +80,11 @@ func (f *FileStorage) Load(all bool) (tasks []*task.Item) {
 		if err != nil {
 			log.Panic(err)
 		}
-		defer file.Close()
+		defer func() {
+			if err := file.Close(); err != nil {
+				fmt.Println("Error when closing:", err)
+			}
+		}()
 
 		r := ndjson.NewReader(file)
 
@@ -106,7 +115,11 @@ func (f *FileStorage) Save(tasks []*task.Item) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			fmt.Println("Error when closing:", err)
+		}
+	}()
 
 	if err := file.Truncate(0); err != nil {
 		log.Panic(err)
@@ -130,7 +143,11 @@ func (f *FileStorage) Complete(task *task.Item) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			fmt.Println("Error when closing:", err)
+		}
+	}()
 
 	r := ndjson.NewWriter(file)
 
