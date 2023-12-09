@@ -162,12 +162,12 @@ func Abbr(abbr string, pointInTime time.Time) time.Time {
 		return nextAfterMonth(12, firstInMonth(pointInTime))
 	// later, someday	Local 2038-01-18, with time 00:00:00. A date far away, with semantically meaningful to GTD users.
 	case "someday":
-		return time.Date(2038, 01, 18, 0, 0, 0, 0, pointInTime.Location())
+		return time.Date(2038, 0o1, 18, 0, 0, 0, 0, pointInTime.Location())
 	case "later":
-		return time.Date(2038, 01, 18, 0, 0, 0, 0, pointInTime.Location())
+		return time.Date(2038, 0o1, 18, 0, 0, 0, 0, pointInTime.Location())
 	// soy	Local date for the next year, January 1st, with time 00:00:00.
 	case "soy":
-		return time.Date(pointInTime.Year()+1, 01, 01, 0, 0, 0, 0, pointInTime.Location())
+		return time.Date(pointInTime.Year()+1, 0o1, 0o1, 0, 0, 0, 0, pointInTime.Location())
 	// eoy	Local date for this year, December 31st, with time 00:00:00.
 	case "eoy":
 		return time.Date(pointInTime.Year(), 12, 31, 0, 0, 0, 0, pointInTime.Location())
@@ -179,21 +179,21 @@ func Abbr(abbr string, pointInTime time.Time) time.Time {
 	case "som":
 		y, m, _ := pointInTime.Date()
 
-		return time.Date(y, m+1, 01, 0, 0, 0, 0, pointInTime.Location())
+		return time.Date(y, m+1, 0o1, 0, 0, 0, 0, pointInTime.Location())
 	// socm	Local date for the 1st day of the current month, with time 00:00:00.
 	case "socm":
 		y, m, _ := pointInTime.Date()
 
-		return time.Date(y, m, 01, 0, 0, 0, 0, pointInTime.Location())
+		return time.Date(y, m, 0o1, 0, 0, 0, 0, pointInTime.Location())
 	// eom, eocm	Local date for the last day of the current month, with time 23:59:59.
 	case "eom":
 		y, m, _ := pointInTime.Date()
 
-		return time.Date(y, m+1, 01, 0, 0, 0, 0, pointInTime.Location()).Add(-time.Second)
+		return time.Date(y, m+1, 0o1, 0, 0, 0, 0, pointInTime.Location()).Add(-time.Second)
 	case "eocm":
 		y, m, _ := pointInTime.Date()
 
-		return time.Date(y, m+1, 01, 0, 0, 0, 0, pointInTime.Location()).Add(-time.Second)
+		return time.Date(y, m+1, 0o1, 0, 0, 0, 0, pointInTime.Location()).Add(-time.Second)
 	// sow	Local date for the next Monday, with time 00:00:00.
 	case "sow":
 		return nextAfterWeekday(1, pointInTime.Truncate(time.Hour*24))

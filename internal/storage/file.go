@@ -9,7 +9,7 @@ import (
 	"github.com/helmecke/taskgopher/internal/task"
 )
 
-const mode = 0644
+const mode = 0o644
 
 // A FileStorage loads and saves tasks to file
 type FileStorage struct {
