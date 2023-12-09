@@ -2,12 +2,14 @@ package parser
 
 import (
 	"log"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
-	"slices"
 
 	"github.com/google/uuid"
+
+	"github.com/helmecke/taskgopher/pkg/timeutils"
 )
 
 const rfc3339FullDate = "2006-01-02"
@@ -67,7 +69,11 @@ func (p *Parser) ParseArgs(args []string) (err error) {
 		if strings.HasPrefix(arg, "due:") {
 			date, err := time.Parse(rfc3339FullDate, arg[4:])
 			if err != nil {
-				log.Fatal(err)
+				if timeutils.Abbr(arg[4:], time.Now()).IsZero() {
+					log.Fatal(err)
+				} else {
+					date = timeutils.Abbr(arg[4:], time.Now())
+				}
 			}
 			p.Filter.Due = date
 			p.Filter.Found = true
@@ -94,7 +100,11 @@ func (p *Parser) ParseArgs(args []string) (err error) {
 
 				date, err := time.Parse(rfc3339FullDate, arg[4:])
 				if err != nil {
-					log.Fatal(err)
+					if timeutils.Abbr(arg[4:], time.Now()).IsZero() {
+						log.Fatal(err)
+					} else {
+						date = timeutils.Abbr(arg[4:], time.Now())
+					}
 				}
 				p.Modification.Due = date
 
