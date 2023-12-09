@@ -20,7 +20,7 @@ jobs:
       - name: install Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.18.x
+          go-version: 1.21.x
       - name: Lint
         uses: golangci/golangci-lint-action@v3
         with:
@@ -34,7 +34,7 @@ jobs:
       - name: install Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.18.x
+          go-version: 1.21.x
       - name: Tidy
         shell: bash
         run: |
@@ -55,6 +55,6 @@ jobs:
       - name: install Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.18.x
+          go-version: 1.21.x
       - name: Test
         run: go test ./...
