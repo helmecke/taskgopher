@@ -16,7 +16,7 @@ type Filter struct {
 	All     bool
 }
 
-// HasDue returns if filter has due date set
+// HasDue returns true if filter has due date set
 func (f *Filter) HasDue() bool {
 	return !f.Due.IsZero()
 }
