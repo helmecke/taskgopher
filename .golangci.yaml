@@ -1,60 +1,83 @@
 linters:
-  enable-all: true
-  disable:
-    - cyclop
-    - exhaustivestruct # (deprecated)
-    - exhaustruct # dont see the point
-    - forbidigo # print is not always for debugging
-    - funlen # use revive for this
-    - gochecknoglobals # (cobra)
-    - gochecknoinits # (cobra)
-    - godot # (cobra)
-    - godox # don't lint todo comments
-    - gofumpt # seems buggy
-    - golint # (deprecated)
-    - gomnd # (this is hard)
-    - interfacer # (deprecated)
-    - lll # use revive for this
-    - maligned # (deprecated)
-    - nestif
-    - nonamedreturns # i find named returns helpful
-    - scopelint # (deprecated)
-    - varnamelen # i like short variables
-    - wsl # (maintenace mode)
+  enable:
+    - errcheck
+    - goimports
+    - revive
+    - ineffassign
+    - govet
+    - unconvert
+    - staticcheck
+    - gosimple
+    - stylecheck
+    - unused
+    - misspell
+  disable-all: true
 
 linters-settings:
   revive:
-    confidence: 0.8
-    errorCode: 0
-    warningCode: 0
+    # setting rules seems to disable all the rules, so re-enable them here
     rules:
-      - name: exported
       - name: blank-imports
+        disabled: false
       - name: context-as-argument
+        disabled: false
       - name: context-keys-type
+        disabled: false
       - name: dot-imports
-      - name: error-return
-      - name: error-strings
-      - name: error-naming
-      - name: exported
-      - name: if-return
-      - name: increment-decrement
-      - name: var-naming
-      - name: var-declaration
-      - name: package-comments
-      - name: range
-      - name: receiver-naming
-      - name: time-naming
-      - name: unexported-return
-      - name: indent-error-flow
-      - name: errorf
+        disabled: false
       - name: empty-block
-      - name: superfluous-else
-      - name: unused-parameter
-      - name: unreachable-code
+        disabled: true
+      - name: error-naming
+        disabled: false
+      - name: error-return
+        disabled: false
+      - name: error-strings
+        disabled: false
+      - name: errorf
+        disabled: false
+      - name: exported
+        disabled: false
+      - name: increment-decrement
+        disabled: true
+      - name: indent-error-flow
+        disabled: false
+      - name: package-comments
+        disabled: true
+      - name: range
+        disabled: false
+      - name: receiver-naming
+        disabled: false
       - name: redefines-builtin-id
+        disabled: true
+      - name: superfluous-else
+        disabled: true
+      - name: time-naming
+        disabled: false
+      - name: unexported-return
+        disabled: false
+      - name: unreachable-code
+        disabled: true
+      - name: unused-parameter
+        disabled: true
+      - name: var-declaration
+        disabled: false
+      - name: var-naming
+        disabled: false
+  stylecheck:
+    # Only enable the checks performed by the staticcheck stand-alone tool,
+    # as documented here: https://staticcheck.io/docs/configuration/options/#checks
+    checks: ["all", "-ST1000", "-ST1003", "-ST1016", "-ST1020", "-ST1021", "-ST1022", "-ST1023"]
 
 issues:
+  # Enable some lints excluded by default
+  exclude-use-default: false
+
+  # Maximum issues count per one linter. Set to 0 to disable. Default is 50.
+  max-issues-per-linter: 0
+
+  # Maximum count of issues with the same text. Set to 0 to disable. Default is 3.
+  max-same-issues: 0
+
   # include issues excluded by default: golangci-lint run -help
   include:
     - EXC0012
