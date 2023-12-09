@@ -21,6 +21,7 @@ func (f *Filter) HasDue() bool {
 	return !f.Due.IsZero()
 }
 
+// HasProject returns true if filter has project set
 func (f *Filter) HasProject() bool {
 	return len(f.Project) > 0
 }
